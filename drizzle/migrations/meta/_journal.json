@@ -1,5 +1,13 @@
 {
   "version": "7",
   "dialect": "postgresql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1794418027561,
+      "tag": "0000_web_criativa_base",
+      "breakpoints": true
+    }
+  ]
 }
