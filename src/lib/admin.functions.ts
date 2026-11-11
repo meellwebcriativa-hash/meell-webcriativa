@@ -4,9 +4,10 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { clientAccountSchema, passwordSchema } from "@/lib/schemas";
 import { friendlyAuthError } from "@/lib/auth-errors";
 
-type Ctx = { supabase: { rpc: (fn: "has_role", args: { _user_id: string; _role: "admin" | "client" }) => PromiseLike<{ data: boolean | null }> }; userId: string };
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
 
-async function assertAdmin(context: Ctx) {
+async function assertAdmin(context: { supabase: SupabaseClient<Database>; userId: string }) {
   const { data } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
   if (!data) throw new Error("Acesso restrito à administradora.");
 }
@@ -15,7 +16,7 @@ export const createClientAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => clientAccountSchema.parse(input))
   .handler(async ({ data, context }) => {
-    await assertAdmin(context as unknown as Ctx);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
       email: data.email,
@@ -47,7 +48,7 @@ export const setClientBlocked = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => targetSchema.extend({ blocked: z.boolean() }).parse(input))
   .handler(async ({ data, context }) => {
-    await assertAdmin(context as unknown as Ctx);
+    await assertAdmin(context);
     const supabaseAdmin = await assertTargetIsClient(data.userId);
     const { error } = await supabaseAdmin.auth.admin.updateUserById(data.userId, {
       ban_duration: data.blocked ? "876000h" : "none",
@@ -64,7 +65,7 @@ export const setClientPassword = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => targetSchema.extend({ password: passwordSchema }).parse(input))
   .handler(async ({ data, context }) => {
-    await assertAdmin(context as unknown as Ctx);
+    await assertAdmin(context);
     const supabaseAdmin = await assertTargetIsClient(data.userId);
     const { error } = await supabaseAdmin.auth.admin.updateUserById(data.userId, { password: data.password });
     if (error) {
