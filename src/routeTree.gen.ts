@@ -15,12 +15,15 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedContaRouteImport } from './routes/_authenticated/conta'
+import { Route as SSlugRouteImport } from './routes/s.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin.clientes'
+import { Route as AuthenticatedAdminProjetosRouteImport } from './routes/_authenticated/admin.projetos'
+import { Route as AuthenticatedAdminSolicitacoesRouteImport } from './routes/_authenticated/admin.solicitacoes'
 import { Route as AuthenticatedPainelIndexRouteImport } from './routes/_authenticated/painel.index'
 import { Route as AuthenticatedPainelCriarRouteImport } from './routes/_authenticated/painel.criar'
 import { Route as AuthenticatedPainelSolicitarRouteImport } from './routes/_authenticated/painel.solicitar'
-import { Route as ApiPublicSetupAdminRouteImport } from './routes/api/public/setup-admin'
+import { Route as AuthenticatedPainelProjetoIdRouteImport } from './routes/_authenticated/painel.projeto.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -51,6 +54,11 @@ const AuthenticatedContaRoute = AuthenticatedContaRouteImport.update({
   path: '/conta',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const SSlugRoute = SSlugRouteImport.update({
+  id: '/s/$slug',
+  path: '/s/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -60,6 +68,18 @@ const AuthenticatedAdminClientesRoute =
   AuthenticatedAdminClientesRouteImport.update({
     id: '/clientes',
     path: '/clientes',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminProjetosRoute =
+  AuthenticatedAdminProjetosRouteImport.update({
+    id: '/projetos',
+    path: '/projetos',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSolicitacoesRoute =
+  AuthenticatedAdminSolicitacoesRouteImport.update({
+    id: '/solicitacoes',
+    path: '/solicitacoes',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedPainelIndexRoute =
@@ -80,11 +100,12 @@ const AuthenticatedPainelSolicitarRoute =
     path: '/painel/solicitar',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const ApiPublicSetupAdminRoute = ApiPublicSetupAdminRouteImport.update({
-  id: '/api/public/setup-admin',
-  path: '/api/public/setup-admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const AuthenticatedPainelProjetoIdRoute =
+  AuthenticatedPainelProjetoIdRouteImport.update({
+    id: '/painel/projeto/$id',
+    path: '/painel/projeto/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -92,24 +113,30 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/conta': typeof AuthenticatedContaRoute
+  '/s/$slug': typeof SSlugRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
+  '/admin/projetos': typeof AuthenticatedAdminProjetosRoute
+  '/admin/solicitacoes': typeof AuthenticatedAdminSolicitacoesRoute
   '/painel/criar': typeof AuthenticatedPainelCriarRoute
   '/painel/solicitar': typeof AuthenticatedPainelSolicitarRoute
-  '/api/public/setup-admin': typeof ApiPublicSetupAdminRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/painel/': typeof AuthenticatedPainelIndexRoute
+  '/painel/projeto/$id': typeof AuthenticatedPainelProjetoIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/conta': typeof AuthenticatedContaRoute
+  '/s/$slug': typeof SSlugRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
+  '/admin/projetos': typeof AuthenticatedAdminProjetosRoute
+  '/admin/solicitacoes': typeof AuthenticatedAdminSolicitacoesRoute
   '/painel/criar': typeof AuthenticatedPainelCriarRoute
   '/painel/solicitar': typeof AuthenticatedPainelSolicitarRoute
-  '/api/public/setup-admin': typeof ApiPublicSetupAdminRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/painel': typeof AuthenticatedPainelIndexRoute
+  '/painel/projeto/$id': typeof AuthenticatedPainelProjetoIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -119,12 +146,15 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/conta': typeof AuthenticatedContaRoute
+  '/s/$slug': typeof SSlugRoute
   '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
+  '/_authenticated/admin/projetos': typeof AuthenticatedAdminProjetosRoute
+  '/_authenticated/admin/solicitacoes': typeof AuthenticatedAdminSolicitacoesRoute
   '/_authenticated/painel/criar': typeof AuthenticatedPainelCriarRoute
   '/_authenticated/painel/solicitar': typeof AuthenticatedPainelSolicitarRoute
-  '/api/public/setup-admin': typeof ApiPublicSetupAdminRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/painel/': typeof AuthenticatedPainelIndexRoute
+  '/_authenticated/painel/projeto/$id': typeof AuthenticatedPainelProjetoIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -134,24 +164,30 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/admin'
     | '/conta'
+    | '/s/$slug'
     | '/admin/clientes'
+    | '/admin/projetos'
+    | '/admin/solicitacoes'
     | '/painel/criar'
     | '/painel/solicitar'
-    | '/api/public/setup-admin'
     | '/admin/'
     | '/painel/'
+    | '/painel/projeto/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/reset-password'
     | '/conta'
+    | '/s/$slug'
     | '/admin/clientes'
+    | '/admin/projetos'
+    | '/admin/solicitacoes'
     | '/painel/criar'
     | '/painel/solicitar'
-    | '/api/public/setup-admin'
     | '/admin'
     | '/painel'
+    | '/painel/projeto/$id'
   id:
     | '__root__'
     | '/'
@@ -160,12 +196,15 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/admin'
     | '/_authenticated/conta'
+    | '/s/$slug'
     | '/_authenticated/admin/clientes'
+    | '/_authenticated/admin/projetos'
+    | '/_authenticated/admin/solicitacoes'
     | '/_authenticated/painel/criar'
     | '/_authenticated/painel/solicitar'
-    | '/api/public/setup-admin'
     | '/_authenticated/admin/'
     | '/_authenticated/painel/'
+    | '/_authenticated/painel/projeto/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -173,7 +212,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
-  ApiPublicSetupAdminRoute: typeof ApiPublicSetupAdminRoute
+  SSlugRoute: typeof SSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -220,6 +259,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedContaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/s/$slug': {
+      id: '/s/$slug'
+      path: '/s/$slug'
+      fullPath: '/s/$slug'
+      preLoaderRoute: typeof SSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
       path: '/'
@@ -232,6 +278,20 @@ declare module '@tanstack/react-router' {
       path: '/clientes'
       fullPath: '/admin/clientes'
       preLoaderRoute: typeof AuthenticatedAdminClientesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/projetos': {
+      id: '/_authenticated/admin/projetos'
+      path: '/projetos'
+      fullPath: '/admin/projetos'
+      preLoaderRoute: typeof AuthenticatedAdminProjetosRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/solicitacoes': {
+      id: '/_authenticated/admin/solicitacoes'
+      path: '/solicitacoes'
+      fullPath: '/admin/solicitacoes'
+      preLoaderRoute: typeof AuthenticatedAdminSolicitacoesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/painel/': {
@@ -255,23 +315,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPainelSolicitarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/api/public/setup-admin': {
-      id: '/api/public/setup-admin'
-      path: '/api/public/setup-admin'
-      fullPath: '/api/public/setup-admin'
-      preLoaderRoute: typeof ApiPublicSetupAdminRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_authenticated/painel/projeto/$id': {
+      id: '/_authenticated/painel/projeto/$id'
+      path: '/painel/projeto/$id'
+      fullPath: '/painel/projeto/$id'
+      preLoaderRoute: typeof AuthenticatedPainelProjetoIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminClientesRoute: typeof AuthenticatedAdminClientesRoute
+  AuthenticatedAdminProjetosRoute: typeof AuthenticatedAdminProjetosRoute
+  AuthenticatedAdminSolicitacoesRoute: typeof AuthenticatedAdminSolicitacoesRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminClientesRoute: AuthenticatedAdminClientesRoute,
+  AuthenticatedAdminProjetosRoute: AuthenticatedAdminProjetosRoute,
+  AuthenticatedAdminSolicitacoesRoute: AuthenticatedAdminSolicitacoesRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
@@ -284,6 +348,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPainelCriarRoute: typeof AuthenticatedPainelCriarRoute
   AuthenticatedPainelSolicitarRoute: typeof AuthenticatedPainelSolicitarRoute
   AuthenticatedPainelIndexRoute: typeof AuthenticatedPainelIndexRoute
+  AuthenticatedPainelProjetoIdRoute: typeof AuthenticatedPainelProjetoIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -292,6 +357,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPainelCriarRoute: AuthenticatedPainelCriarRoute,
   AuthenticatedPainelSolicitarRoute: AuthenticatedPainelSolicitarRoute,
   AuthenticatedPainelIndexRoute: AuthenticatedPainelIndexRoute,
+  AuthenticatedPainelProjetoIdRoute: AuthenticatedPainelProjetoIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -302,7 +368,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
-  ApiPublicSetupAdminRoute: ApiPublicSetupAdminRoute,
+  SSlugRoute: SSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

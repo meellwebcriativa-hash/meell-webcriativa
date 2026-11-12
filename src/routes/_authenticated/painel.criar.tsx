@@ -64,23 +64,27 @@ function CreateSite() {
     }
     if (!me) return;
     setSaving(true);
-    const { error } = await supabase.from("projects").insert({
-      owner_id: me.id,
-      created_by: me.id,
-      name: parsed.data.name,
-      segment: parsed.data.segment,
-      template: parsed.data.style,
-      status: "rascunho",
-      content: { segmentOther: parsed.data.segmentOther },
-    });
+    const { data: created, error } = await supabase
+      .from("projects")
+      .insert({
+        owner_id: me.id,
+        created_by: me.id,
+        name: parsed.data.name,
+        segment: parsed.data.segment,
+        template: parsed.data.style,
+        status: "rascunho",
+        content: { segmentOther: parsed.data.segmentOther },
+      })
+      .select("id")
+      .maybeSingle();
     setSaving(false);
-    if (error) {
+    if (error || !created) {
       toast.error("Não foi possível salvar agora. Tente de novo.");
       return;
     }
     await queryClient.invalidateQueries({ queryKey: ["projects"] });
-    toast.success("Projeto salvo! A personalização com prévia ao vivo chega na próxima etapa da plataforma.");
-    navigate({ to: "/painel" });
+    toast.success("Projeto criado! Agora personalize com prévia ao vivo.");
+    navigate({ to: "/painel/projeto/$id", params: { id: created.id } });
   }
 
   return (

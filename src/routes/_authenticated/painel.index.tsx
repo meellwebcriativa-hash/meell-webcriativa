@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowRight, FolderHeart, Heart, Inbox, Trash2, Wand2 } from "lucide-react";
+import { ArrowRight, ExternalLink, FolderHeart, Heart, Inbox, PenLine, Trash2, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell, PageTitle } from "@/components/app/AppShell";
@@ -124,8 +124,19 @@ function ClientDashboard() {
                     {p.template ? ` · ${styleLabel(p.template)}` : ""}
                   </p>
                   <p className="mt-4 text-sm text-secondary-foreground">{PROJECT_STATUS[p.status].hint}</p>
-                  <div className="mt-auto flex items-center justify-between pt-5 text-xs text-muted-foreground">
-                    <span>Atualizado em {dateFmt.format(new Date(p.updated_at))}</span>
+                  <div className="mt-auto flex flex-wrap items-center gap-2 pt-5">
+                    <Button asChild variant="soft" size="sm">
+                      <Link to="/painel/projeto/$id" params={{ id: p.id }}>
+                        <PenLine /> Editar
+                      </Link>
+                    </Button>
+                    {p.slug && p.status === "publicado" ? (
+                      <Button asChild variant="outline" size="sm">
+                        <a href={`/s/${p.slug}`} target="_blank" rel="noreferrer">
+                          <ExternalLink /> Ver site
+                        </a>
+                      </Button>
+                    ) : null}
                     {p.status === "rascunho" ? (
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
@@ -147,6 +158,9 @@ function ClientDashboard() {
                         </AlertDialogContent>
                       </AlertDialog>
                     ) : null}
+                    <span className="ml-auto text-xs text-muted-foreground">
+                      Atualizado em {dateFmt.format(new Date(p.updated_at))}
+                    </span>
                   </div>
                 </div>
               );

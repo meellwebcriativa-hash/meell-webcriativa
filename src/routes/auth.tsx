@@ -13,9 +13,10 @@ import { meQuery } from "@/lib/queries";
 import { safeRedirectPath } from "@/lib/schemas";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (search: Record<string, unknown>): { redirect?: string } => ({
-    redirect: safeRedirectPath(search.redirect) ?? undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>): { redirect?: string } => {
+    const redirect = safeRedirectPath(search["redirect"]);
+    return redirect ? { redirect } : {};
+  },
   head: () => ({
     meta: [
       { title: "Entrar — Web Criativa" },

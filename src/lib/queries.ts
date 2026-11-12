@@ -38,7 +38,7 @@ export const myProjectsQuery = (userId: string) =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("projects")
-        .select("id, name, segment, template, status, content, created_at, updated_at")
+        .select("id, name, segment, template, status, slug, content, created_at, updated_at")
         .eq("owner_id", userId)
         .order("updated_at", { ascending: false });
       if (error) throw error;
@@ -94,9 +94,24 @@ export const adminProjectsQuery = queryOptions({
   queryFn: async () => {
     const { data, error } = await supabase
       .from("projects")
-      .select("id, name, segment, template, status, owner_id, request_id, content, created_at, updated_at, profiles(full_name, email)")
+      .select("id, name, segment, template, status, slug, owner_id, request_id, content, created_at, updated_at, profiles(full_name, email)")
       .order("updated_at", { ascending: false });
     if (error) throw error;
     return data;
   },
 });
+
+/** A single project, used by the editor. */
+export const projectQuery = (id: string) =>
+  queryOptions({
+    queryKey: ["project", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("projects")
+        .select("id, owner_id, name, segment, template, status, content, slug, updated_at")
+        .eq("id", id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
