@@ -44,12 +44,21 @@ function ResetPasswordPage() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const parsed = passwordSchema.safeParse(password);
-    if (!parsed.success) return toast.error(firstError(parsed.error));
-    if (password !== confirm) return toast.error("As senhas não são iguais.");
+    if (!parsed.success) {
+      toast.error(firstError(parsed.error));
+      return;
+    }
+    if (password !== confirm) {
+      toast.error("As senhas não são iguais.");
+      return;
+    }
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password });
     setLoading(false);
-    if (error) return toast.error(friendlyAuthError(error.message));
+    if (error) {
+      toast.error(friendlyAuthError(error.message));
+      return;
+    }
     toast.success("Senha criada! Bem-vinda de volta.");
     navigate({ to: "/painel", replace: true });
   }
