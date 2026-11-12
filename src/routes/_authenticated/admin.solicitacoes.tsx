@@ -37,6 +37,7 @@ import {
 } from "@/lib/constants";
 import { adminRequestsQuery, meQuery } from "@/lib/queries";
 import { parseRequestSegment } from "@/lib/site-content";
+import { starterContentFor, templateForSegment } from "@/lib/site-templates";
 import { signedUrls } from "@/lib/uploads";
 import { cn } from "@/lib/utils";
 
@@ -212,6 +213,7 @@ function RequestDialog({ request, onClose }: { request: AdminRequest; onClose: (
     if (!me) return;
     setCreating(true);
     try {
+      const starter = starterContentFor(segment, other);
       const { data: created, error } = await supabase
         .from("projects")
         .insert({
@@ -220,18 +222,16 @@ function RequestDialog({ request, onClose }: { request: AdminRequest; onClose: (
           request_id: request.id,
           name: request.business_name,
           segment,
-          template: request.style || "elegante",
+          template: request.style || templateForSegment(segment).style,
           status: "em_producao",
           content: {
-            segmentOther: other,
-            tagline: "",
-            about: request.description,
+            ...starter,
+            // O texto da cliente tem prioridade sobre o exemplo do nicho.
+            about: request.description.trim() || starter.about,
             whatsapp: request.contact_whatsapp,
             instagram: request.contact_instagram,
             email: request.contact_email,
             address: request.contact_address,
-            hours: "",
-            services: [],
             gallery: request.photo_paths ?? [],
           } as unknown as Json,
         })

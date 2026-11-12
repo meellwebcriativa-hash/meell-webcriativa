@@ -11,6 +11,7 @@ import {
   Plus,
   Rocket,
   Save,
+  Sparkles,
   Trash2,
   Undo2,
   X,
@@ -22,14 +23,25 @@ import { AppShell, PageTitle } from "@/components/app/AppShell";
 import { SegmentPicker } from "@/components/app/SegmentPicker";
 import { ProjectStatusBadge } from "@/components/app/StatusBadge";
 import { SitePreviewCard, SiteRenderer } from "@/components/site/SiteRenderer";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { PROJECT_STATUS, SITE_STYLES, type ProjectStatus } from "@/lib/constants";
+import { PROJECT_STATUS, SITE_STYLES, segmentLabel, type ProjectStatus } from "@/lib/constants";
 import { publishProject, setProjectStatus } from "@/lib/projects";
 import { meQuery, projectQuery, type Me } from "@/lib/queries";
 import { parseSiteContent, type SiteContent } from "@/lib/site-content";
+import { hasCustomContent, templateForSegment, withSegmentTemplate } from "@/lib/site-templates";
 import { MAX_PHOTOS, signedUrls, uploadUserFiles } from "@/lib/uploads";
 import { cn } from "@/lib/utils";
 
@@ -104,6 +116,7 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
   const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [applyTemplateOpen, setApplyTemplateOpen] = useState(false);
 
   const galleryKey = content.gallery.join("|");
 
@@ -127,10 +140,27 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
   const patch = (values: Partial<SiteContent>) =>
     setContent((current) => ({ ...current, ...values }));
 
+  // Site ainda em branco? O modelo do nicho entra sozinho ao trocar o segmento.
+  function handleSegmentChange(value: string) {
+    setSegment(value);
+    if (value === "outro") return;
+    setContent((current) => (hasCustomContent(current) ? current : withSegmentTemplate(current, value)));
+  }
+
+  function applySegmentTemplate() {
+    setContent((current) => withSegmentTemplate(current, segment, current.segmentOther));
+    setApplyTemplateOpen(false);
+    toast.success(
+      `Modelo de ${segmentLabel(segment)} aplicado. Clique em Salvar para guardar as alterações.`,
+    );
+  }
+
   const preview = useMemo<SiteContent>(
     () => ({ ...content, segmentOther: segment === "outro" ? content.segmentOther : "" }),
     [content, segment],
   );
+
+  const contentIsBlank = !hasCustomContent(content);
 
   const publicUrl =
     slug && typeof window !== "undefined" ? `${window.location.origin}/s/${slug}` : "";
@@ -313,9 +343,30 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
                 <SegmentPicker
                   value={segment}
                   other={content.segmentOther}
-                  onChange={setSegment}
+                  onChange={handleSegmentChange}
                   onOtherChange={(value) => patch({ segmentOther: value })}
                 />
+                <div
+                  className={cn(
+                    "flex flex-wrap items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm",
+                    contentIsBlank ? "bg-lilac-soft" : "bg-soft",
+                  )}
+                >
+                  <p className="inline-flex items-center gap-2 text-muted-foreground">
+                    <Sparkles className="size-4 shrink-0 text-pink" />
+                    {contentIsBlank
+                      ? `Este site ainda está em branco. Use o modelo pronto de ${segmentLabel(segment, content.segmentOther)}.`
+                      : `Modelo pronto de ${segmentLabel(segment, content.segmentOther)}: textos, serviços e horários de exemplo.`}
+                  </p>
+                  <Button
+                    type="button"
+                    variant={contentIsBlank ? "brand" : "outline"}
+                    size="sm"
+                    onClick={() => setApplyTemplateOpen(true)}
+                  >
+                    Usar modelo pronto
+                  </Button>
+                </div>
               </div>
               <div className="space-y-3">
                 <Label>Estilo</Label>
@@ -341,6 +392,26 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
                 </div>
               </div>
             </Card>
+
+            <AlertDialog open={applyTemplateOpen} onOpenChange={setApplyTemplateOpen}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Aplicar o modelo de {segmentLabel(segment, content.segmentOther)}?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Vamos substituir a frase de destaque, o texto "sobre", os serviços e o horário de
+                    atendimento pelos exemplos deste nicho. Suas fotos e contatos continuam como estão.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={applySegmentTemplate}>
+                    Aplicar modelo
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
 
             <Card title="Chamada principal" hint="A primeira frase que a visitante lê.">
               <div className="space-y-2">

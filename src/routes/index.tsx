@@ -118,7 +118,8 @@ function Landing() {
               </div>
               <h3 className="mt-5 text-2xl font-semibold text-plum">Criar meu próprio site</h3>
               <p className="mt-2 text-muted-foreground">
-                Siga etapas guiadas: escolha o segmento, o modelo, personalize e veja a prévia mudar na hora.
+                Escolha o seu segmento e receba um site já montado para ele — depois é só trocar
+                textos, preços e fotos.
               </p>
               <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary">
                 Começar agora <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
@@ -164,11 +165,19 @@ function Landing() {
           </div>
           <div className="mt-12 flex flex-wrap justify-center gap-2">
             {SEGMENTS.map((s) => (
-              <span key={s.value} className="rounded-full border bg-card px-4 py-2 text-sm text-secondary-foreground">
+              <Link
+                key={s.value}
+                to="/auth"
+                title={`Entrar e ver o modelo de ${s.label}`}
+                className="rounded-full border bg-card px-4 py-2 text-sm text-secondary-foreground transition-colors hover:border-ring hover:text-primary"
+              >
                 {s.emoji} {s.label}
-              </span>
+              </Link>
             ))}
           </div>
+          <p className="mt-4 text-center text-sm text-muted-foreground">
+            Cada segmento já vem com um modelo pronto — entre para ver o do seu negócio.
+          </p>
         </div>
       </section>
 

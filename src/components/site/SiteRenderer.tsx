@@ -76,7 +76,7 @@ export function SiteRenderer({
     { key: "email", icon: Mail, label: safe.email, href: emailHref, show: !!emailHref },
     { key: "address", icon: MapPin, label: safe.address, href: "", show: !!safe.address.trim() },
     { key: "hours", icon: Clock, label: safe.hours, href: "", show: !!safe.hours.trim() },
-  ].filter((item) => item.show || preview);
+  ].filter((item) => item.show);
 
   const muted: CSSProperties = { color: theme.muted };
 
@@ -282,6 +282,15 @@ export function SiteRenderer({
             Fale com a gente pelos canais abaixo — respondemos com todo carinho.
           </p>
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
+            {contact.length === 0 && preview ? (
+              <p
+                style={{ borderColor: theme.border, color: theme.muted }}
+                className="rounded-2xl border border-dashed p-4 text-sm sm:col-span-2"
+              >
+                Adicione WhatsApp, Instagram, e-mail e endereço no editor — os botões de contato
+                aparecem aqui.
+              </p>
+            ) : null}
             {contact.map((item) => {
               const Icon = item.icon;
               const body = (

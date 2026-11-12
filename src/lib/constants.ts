@@ -20,6 +20,8 @@ export const SITE_STYLES = [
   { value: "minimalista", label: "Minimalista", description: "Muito respiro, poucas cores e foco no essencial." },
 ] as const;
 
+export type SiteStyleValue = (typeof SITE_STYLES)[number]["value"];
+
 export const SITE_PAGES = [
   "Início",
   "Sobre nós",
