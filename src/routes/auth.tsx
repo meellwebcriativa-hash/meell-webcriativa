@@ -5,6 +5,7 @@ import { ArrowLeft, Eye, EyeOff, Loader2, Lock, Mail, MessageCircle } from "luci
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/brand/Logo";
+import { PageBackdrop } from "@/components/brand/PageBackdrop";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -85,7 +86,8 @@ function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-page">
+    <div className="relative isolate flex min-h-screen flex-col">
+      <PageBackdrop />
       <header className="mx-auto flex h-20 w-full max-w-6xl items-center px-4 sm:px-6">
         <Link to="/" aria-label="Voltar ao início">
           <Logo />

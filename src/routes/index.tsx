@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import hero from "@/assets/hero-web-criativa.jpg";
 import { Logo } from "@/components/brand/Logo";
+import { PageBackdrop } from "@/components/brand/PageBackdrop";
 import { Button } from "@/components/ui/button";
 import { SEGMENTS } from "@/lib/constants";
 import { linkPedirCadastro, linkSitePersonalizado } from "@/lib/whatsapp";
@@ -44,7 +45,8 @@ const steps = [
 
 function Landing() {
   return (
-    <div className="min-h-screen bg-page">
+    <div className="relative isolate min-h-screen">
+      <PageBackdrop />
       <header className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Logo />
         <Button asChild variant="soft">
@@ -97,21 +99,32 @@ function Landing() {
       <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
         <h2 className="text-center text-3xl font-semibold text-plum sm:text-4xl">Duas formas de ter seu site</h2>
         <div className="mt-10 grid gap-6 md:grid-cols-2">
-          <Link
-            to="/auth"
-            className="group flex flex-col rounded-[2rem] border bg-card p-8 shadow-card transition-all hover:-translate-y-1 hover:shadow-candy"
-          >
-            <div className="flex size-12 items-center justify-center rounded-2xl bg-lilac-soft text-secondary-foreground">
-              <Wand2 />
-            </div>
-            <h3 className="mt-5 text-2xl font-semibold text-plum">Criar meu próprio site</h3>
-            <p className="mt-2 text-muted-foreground">
-              Siga etapas guiadas: escolha o segmento, o modelo, personalize e veja a prévia mudar na hora.
-            </p>
-            <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary">
-              Começar agora <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-            </span>
-          </Link>
+          <div className="relative h-full">
+            {/* brilho lilás com halo rosa atrás do card flutuante */}
+            <div
+              aria-hidden
+              className="animate-drift-slow pointer-events-none absolute -inset-5 rounded-[3rem] bg-gradient-to-br from-lilac/60 via-lilac/30 to-pink/55 opacity-70 blur-2xl"
+            />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-8 -bottom-7 h-20 rounded-full bg-pink/45 blur-2xl"
+            />
+            <Link
+              to="/auth"
+              className="group animate-float-soft relative flex h-full flex-col rounded-[2rem] border bg-card p-8 shadow-candy"
+            >
+              <div className="flex size-12 items-center justify-center rounded-2xl bg-lilac-soft text-secondary-foreground">
+                <Wand2 />
+              </div>
+              <h3 className="mt-5 text-2xl font-semibold text-plum">Criar meu próprio site</h3>
+              <p className="mt-2 text-muted-foreground">
+                Siga etapas guiadas: escolha o segmento, o modelo, personalize e veja a prévia mudar na hora.
+              </p>
+              <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary">
+                Começar agora <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </Link>
+          </div>
           <a
             href={linkSitePersonalizado}
             target="_blank"

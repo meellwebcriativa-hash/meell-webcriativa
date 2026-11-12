@@ -149,12 +149,39 @@
   box-shadow: var(--shadow-card);
 }
 
+@utility bg-dots {
+  background-image: radial-gradient(circle, color-mix(in oklab, var(--lilac) 40%, transparent) 1px, transparent 1.4px);
+  background-size: 26px 26px;
+  background-position: center;
+  mask-image: radial-gradient(ellipse 85% 70% at 50% 12%, #000 5%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 70% at 50% 12%, #000 5%, transparent 78%);
+}
+
 @keyframes float-soft {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
 }
 @utility animate-float-soft {
   animation: float-soft 7s ease-in-out infinite;
+}
+
+@keyframes drift-slow {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(3%, -4%, 0) scale(1.08); }
+}
+@utility animate-drift-slow {
+  animation: drift-slow 22s ease-in-out infinite;
+}
+@utility animate-drift-slower {
+  animation: drift-slow 32s ease-in-out infinite reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-soft,
+  .animate-drift-slow,
+  .animate-drift-slower {
+    animation: none !important;
+  }
 }
 
 @layer base {
