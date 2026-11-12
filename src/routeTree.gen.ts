@@ -13,8 +13,10 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedContaRouteImport } from './routes/_authenticated/conta'
 import { Route as AuthenticatedPainelIndexRouteImport } from './routes/_authenticated/painel.index'
 import { Route as AuthenticatedPainelCriarRouteImport } from './routes/_authenticated/painel.criar'
+import { Route as AuthenticatedPainelSolicitarRouteImport } from './routes/_authenticated/painel.solicitar'
 import { Route as ApiPublicSetupAdminRouteImport } from './routes/api/public/setup-admin'
 
 const IndexRoute = IndexRouteImport.update({
@@ -36,6 +38,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedContaRoute = AuthenticatedContaRouteImport.update({
+  id: '/conta',
+  path: '/conta',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPainelIndexRoute =
   AuthenticatedPainelIndexRouteImport.update({
     id: '/painel/',
@@ -48,6 +55,12 @@ const AuthenticatedPainelCriarRoute =
     path: '/painel/criar',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPainelSolicitarRoute =
+  AuthenticatedPainelSolicitarRouteImport.update({
+    id: '/painel/solicitar',
+    path: '/painel/solicitar',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const ApiPublicSetupAdminRoute = ApiPublicSetupAdminRouteImport.update({
   id: '/api/public/setup-admin',
   path: '/api/public/setup-admin',
@@ -58,7 +71,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/conta': typeof AuthenticatedContaRoute
   '/painel/criar': typeof AuthenticatedPainelCriarRoute
+  '/painel/solicitar': typeof AuthenticatedPainelSolicitarRoute
   '/api/public/setup-admin': typeof ApiPublicSetupAdminRoute
   '/painel/': typeof AuthenticatedPainelIndexRoute
 }
@@ -66,7 +81,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/conta': typeof AuthenticatedContaRoute
   '/painel/criar': typeof AuthenticatedPainelCriarRoute
+  '/painel/solicitar': typeof AuthenticatedPainelSolicitarRoute
   '/api/public/setup-admin': typeof ApiPublicSetupAdminRoute
   '/painel': typeof AuthenticatedPainelIndexRoute
 }
@@ -76,7 +93,9 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/conta': typeof AuthenticatedContaRoute
   '/_authenticated/painel/criar': typeof AuthenticatedPainelCriarRoute
+  '/_authenticated/painel/solicitar': typeof AuthenticatedPainelSolicitarRoute
   '/api/public/setup-admin': typeof ApiPublicSetupAdminRoute
   '/_authenticated/painel/': typeof AuthenticatedPainelIndexRoute
 }
@@ -86,7 +105,9 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/conta'
     | '/painel/criar'
+    | '/painel/solicitar'
     | '/api/public/setup-admin'
     | '/painel/'
   fileRoutesByTo: FileRoutesByTo
@@ -94,7 +115,9 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/conta'
     | '/painel/criar'
+    | '/painel/solicitar'
     | '/api/public/setup-admin'
     | '/painel'
   id:
@@ -103,7 +126,9 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/reset-password'
+    | '/_authenticated/conta'
     | '/_authenticated/painel/criar'
+    | '/_authenticated/painel/solicitar'
     | '/api/public/setup-admin'
     | '/_authenticated/painel/'
   fileRoutesById: FileRoutesById
@@ -146,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/conta': {
+      id: '/_authenticated/conta'
+      path: '/conta'
+      fullPath: '/conta'
+      preLoaderRoute: typeof AuthenticatedContaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/painel/': {
       id: '/_authenticated/painel/'
       path: '/painel'
@@ -160,6 +192,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPainelCriarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/painel/solicitar': {
+      id: '/_authenticated/painel/solicitar'
+      path: '/painel/solicitar'
+      fullPath: '/painel/solicitar'
+      preLoaderRoute: typeof AuthenticatedPainelSolicitarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/public/setup-admin': {
       id: '/api/public/setup-admin'
       path: '/api/public/setup-admin'
@@ -171,12 +210,16 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedContaRoute: typeof AuthenticatedContaRoute
   AuthenticatedPainelCriarRoute: typeof AuthenticatedPainelCriarRoute
+  AuthenticatedPainelSolicitarRoute: typeof AuthenticatedPainelSolicitarRoute
   AuthenticatedPainelIndexRoute: typeof AuthenticatedPainelIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedContaRoute: AuthenticatedContaRoute,
   AuthenticatedPainelCriarRoute: AuthenticatedPainelCriarRoute,
+  AuthenticatedPainelSolicitarRoute: AuthenticatedPainelSolicitarRoute,
   AuthenticatedPainelIndexRoute: AuthenticatedPainelIndexRoute,
 }
 

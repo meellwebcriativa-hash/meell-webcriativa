@@ -72,9 +72,7 @@ function AccountPage() {
       return;
     }
     setSavingPassword(true);
-    const { error } = await supabase.auth.updateUser({ password: next, current_password: current } as {
-      password: string;
-    });
+    const { error } = await supabase.auth.updateUser({ password: next, current_password: current });
     setSavingPassword(false);
     if (error) {
       toast.error(friendlyAuthError(error.message));
