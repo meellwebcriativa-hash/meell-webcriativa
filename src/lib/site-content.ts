@@ -111,13 +111,21 @@ export function whatsappLink(phone: string): string {
 }
 
 export function instagramLink(handle: string): string {
-  const clean = (handle ?? "").trim().replace(/^@/, "").replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/\/+$/, "");
+  const clean = (handle ?? "")
+    .trim()
+    .replace(/^@/, "")
+    .replace(/^https?:\/\/(www\.)?instagram\.com\//i, "")
+    .replace(/\/+$/, "");
   if (!clean) return "";
   return `https://instagram.com/${clean}`;
 }
 
 export function instagramHandle(handle: string): string {
-  const clean = (handle ?? "").trim().replace(/^@/, "").replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/\/+$/, "");
+  const clean = (handle ?? "")
+    .trim()
+    .replace(/^@/, "")
+    .replace(/^https?:\/\/(www\.)?instagram\.com\//i, "")
+    .replace(/\/+$/, "");
   return clean ? `@${clean}` : "";
 }
 

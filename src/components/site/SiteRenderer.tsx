@@ -25,7 +25,14 @@ export type SiteRendererProps = {
  * Renders a client site. Used by the public page and by the live preview
  * inside the editor, so both always look exactly the same.
  */
-export function SiteRenderer({ name, segment, template, content, urls = {}, preview = false }: SiteRendererProps) {
+export function SiteRenderer({
+  name,
+  segment,
+  template,
+  content,
+  urls = {},
+  preview = false,
+}: SiteRendererProps) {
   const theme = themeFor(template);
   const segmentText = segmentLabel(segment, content.segmentOther);
   const safe = parseSiteContent(content);
@@ -52,8 +59,20 @@ export function SiteRenderer({ name, segment, template, content, urls = {}, prev
   ].filter((item) => item.show);
 
   const contact = [
-    { key: "whatsapp", icon: MessageCircle, label: safe.whatsapp, href: whatsappHref, show: !!safe.whatsapp.trim() },
-    { key: "instagram", icon: Instagram, label: instagramHandle(safe.instagram), href: instagramHref, show: !!instagramHref },
+    {
+      key: "whatsapp",
+      icon: MessageCircle,
+      label: safe.whatsapp,
+      href: whatsappHref,
+      show: !!safe.whatsapp.trim(),
+    },
+    {
+      key: "instagram",
+      icon: Instagram,
+      label: instagramHandle(safe.instagram),
+      href: instagramHref,
+      show: !!instagramHref,
+    },
     { key: "email", icon: Mail, label: safe.email, href: emailHref, show: !!emailHref },
     { key: "address", icon: MapPin, label: safe.address, href: "", show: !!safe.address.trim() },
     { key: "hours", icon: Clock, label: safe.hours, href: "", show: !!safe.hours.trim() },
@@ -62,7 +81,10 @@ export function SiteRenderer({ name, segment, template, content, urls = {}, prev
   const muted: CSSProperties = { color: theme.muted };
 
   return (
-    <div style={{ background: theme.bg, color: theme.ink, fontFamily: theme.body }} className="flex min-h-full flex-col">
+    <div
+      style={{ background: theme.bg, color: theme.ink, fontFamily: theme.body }}
+      className="flex min-h-full flex-col"
+    >
       <header
         style={{ borderColor: theme.border, background: theme.bg }}
         className="sticky top-0 z-10 border-b"
@@ -148,7 +170,10 @@ export function SiteRenderer({ name, segment, template, content, urls = {}, prev
       {(about || preview) && (
         <section id="sobre" className="px-5 py-14 sm:py-20">
           <div className="mx-auto grid max-w-5xl gap-8 sm:grid-cols-[0.6fr_1fr]">
-            <h2 style={{ fontFamily: theme.display }} className="text-3xl font-semibold sm:text-4xl">
+            <h2
+              style={{ fontFamily: theme.display }}
+              className="text-3xl font-semibold sm:text-4xl"
+            >
               Sobre
             </h2>
             <div className="space-y-4 text-base leading-relaxed">
@@ -160,7 +185,8 @@ export function SiteRenderer({ name, segment, template, content, urls = {}, prev
                 ))
               ) : (
                 <p style={muted}>
-                  Conte aqui a história do seu negócio, o que você faz e o que torna o seu atendimento especial.
+                  Conte aqui a história do seu negócio, o que você faz e o que torna o seu
+                  atendimento especial.
                 </p>
               )}
             </div>
@@ -169,9 +195,16 @@ export function SiteRenderer({ name, segment, template, content, urls = {}, prev
       )}
 
       {(services.length > 0 || preview) && (
-        <section id="servicos" style={{ background: theme.surface }} className="px-5 py-14 sm:py-20">
+        <section
+          id="servicos"
+          style={{ background: theme.surface }}
+          className="px-5 py-14 sm:py-20"
+        >
           <div className="mx-auto max-w-5xl">
-            <h2 style={{ fontFamily: theme.display }} className="text-3xl font-semibold sm:text-4xl">
+            <h2
+              style={{ fontFamily: theme.display }}
+              className="text-3xl font-semibold sm:text-4xl"
+            >
               Serviços
             </h2>
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -179,7 +212,11 @@ export function SiteRenderer({ name, segment, template, content, urls = {}, prev
                 services.map((service, index) => (
                   <article
                     key={`${service.title}-${index}`}
-                    style={{ borderColor: theme.border, background: theme.bg, borderRadius: theme.heroRadius }}
+                    style={{
+                      borderColor: theme.border,
+                      background: theme.bg,
+                      borderRadius: theme.heroRadius,
+                    }}
                     className="flex flex-col border p-6"
                   >
                     <h3 className="text-lg font-semibold">{service.title || "Serviço"}</h3>
@@ -201,7 +238,8 @@ export function SiteRenderer({ name, segment, template, content, urls = {}, prev
                   className="border border-dashed p-6 sm:col-span-2 lg:col-span-3"
                 >
                   <p style={muted} className="text-sm">
-                    Adicione os serviços ou produtos que você oferece — com descrição e preço, se quiser.
+                    Adicione os serviços ou produtos que você oferece — com descrição e preço, se
+                    quiser.
                   </p>
                 </article>
               )}
@@ -213,7 +251,10 @@ export function SiteRenderer({ name, segment, template, content, urls = {}, prev
       {gallery.length > 0 && (
         <section id="galeria" className="px-5 py-14 sm:py-20">
           <div className="mx-auto max-w-5xl">
-            <h2 style={{ fontFamily: theme.display }} className="text-3xl font-semibold sm:text-4xl">
+            <h2
+              style={{ fontFamily: theme.display }}
+              className="text-3xl font-semibold sm:text-4xl"
+            >
               Galeria
             </h2>
             <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -266,7 +307,11 @@ export function SiteRenderer({ name, segment, template, content, urls = {}, prev
                   {body}
                 </a>
               ) : (
-                <div key={item.key} style={style} className="flex items-center gap-3 border p-4 text-sm">
+                <div
+                  key={item.key}
+                  style={style}
+                  className="flex items-center gap-3 border p-4 text-sm"
+                >
                   {body}
                 </div>
               );
@@ -276,7 +321,7 @@ export function SiteRenderer({ name, segment, template, content, urls = {}, prev
       </section>
 
       <footer style={{ borderColor: theme.border }} className="mt-auto border-t px-5 py-8">
-        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-2 text-xs sm:flex-row" >
+        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-2 text-xs sm:flex-row">
           <span style={muted}>
             © {new Date().getFullYear()} {businessName}
           </span>
@@ -296,7 +341,9 @@ export function SitePreviewCard({ children }: { children: ReactNode }) {
         <span className="size-2.5 rounded-full bg-pink/70" />
         <span className="size-2.5 rounded-full bg-lilac/60" />
         <span className="size-2.5 rounded-full bg-muted-foreground/30" />
-        <span className="ml-2 text-[0.7rem] tracking-wide text-muted-foreground uppercase">Prévia ao vivo</span>
+        <span className="ml-2 text-[0.7rem] tracking-wide text-muted-foreground uppercase">
+          Prévia ao vivo
+        </span>
       </div>
       <div className="max-h-[70vh] overflow-y-auto">{children}</div>
     </div>

@@ -19,10 +19,22 @@ import { PageTitle } from "@/components/app/AppShell";
 import { EmptyState } from "@/components/app/EmptyState";
 import { RequestStatusBadge } from "@/components/app/StatusBadge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { REQUEST_STATUS, SITE_STYLES, segmentLabel, styleLabel, type RequestStatus } from "@/lib/constants";
+import {
+  REQUEST_STATUS,
+  SITE_STYLES,
+  segmentLabel,
+  styleLabel,
+  type RequestStatus,
+} from "@/lib/constants";
 import { adminRequestsQuery, meQuery } from "@/lib/queries";
 import { parseRequestSegment } from "@/lib/site-content";
 import { signedUrls } from "@/lib/uploads";
@@ -46,7 +58,11 @@ type AdminRequest = Awaited<ReturnType<NonNullable<typeof adminRequestsQuery.que
 
 const FILTERS = ["todas", "nova", "em_andamento", "concluida", "cancelada"] as const;
 
-const dateFmt = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short", year: "numeric" });
+const dateFmt = new Intl.DateTimeFormat("pt-BR", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
 
 function RequestsPage() {
   const { data: requests } = useSuspenseQuery(adminRequestsQuery);
@@ -74,12 +90,15 @@ function RequestsPage() {
             onClick={() => setFilter(value)}
             className={cn(
               "whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground",
-              filter === value && "bg-brand text-primary-foreground shadow-candy hover:bg-brand hover:text-primary-foreground",
+              filter === value &&
+                "bg-brand text-primary-foreground shadow-candy hover:bg-brand hover:text-primary-foreground",
             )}
           >
             {value === "todas" ? "Todas" : REQUEST_STATUS[value].label}
             <span className="ml-2 text-xs opacity-70">
-              {value === "todas" ? requests.length : requests.filter((request) => request.status === value).length}
+              {value === "todas"
+                ? requests.length
+                : requests.filter((request) => request.status === value).length}
             </span>
           </button>
         ))}
@@ -113,9 +132,12 @@ function RequestsPage() {
                   {segmentLabel(segment, other)}
                   {request.style ? ` · ${styleLabel(request.style)}` : ""}
                 </p>
-                <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{request.description}</p>
+                <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">
+                  {request.description}
+                </p>
                 <p className="mt-4 inline-flex items-center gap-1 text-xs text-muted-foreground">
-                  <CalendarDays className="size-3.5" /> {dateFmt.format(new Date(request.created_at))}
+                  <CalendarDays className="size-3.5" />{" "}
+                  {dateFmt.format(new Date(request.created_at))}
                 </p>
               </button>
             );
@@ -124,11 +146,7 @@ function RequestsPage() {
       )}
 
       {selected ? (
-        <RequestDialog
-          key={selected.id}
-          request={selected}
-          onClose={() => setOpenId(null)}
-        />
+        <RequestDialog key={selected.id} request={selected} onClose={() => setOpenId(null)} />
       ) : null}
     </>
   );
@@ -146,7 +164,8 @@ function RequestDialog({ request, onClose }: { request: AdminRequest; onClose: (
   const [projectId, setProjectId] = useState(request.project_id ?? "");
 
   const paths = useMemo(
-    () => [request.logo_path, ...(request.photo_paths ?? [])].filter((path): path is string => !!path),
+    () =>
+      [request.logo_path, ...(request.photo_paths ?? [])].filter((path): path is string => !!path),
     [request.logo_path, request.photo_paths],
   );
 
@@ -161,7 +180,7 @@ function RequestDialog({ request, onClose }: { request: AdminRequest; onClose: (
     return () => {
       active = false;
     };
-  }, [paths.join("|")]);
+  }, [paths]);
 
   const { segment, other } = parseRequestSegment(request.segment);
 
@@ -239,14 +258,18 @@ function RequestDialog({ request, onClose }: { request: AdminRequest; onClose: (
     }
   }
 
-  const photos = (request.photo_paths ?? []).map((path) => files[path]).filter((url): url is string => !!url);
+  const photos = (request.photo_paths ?? [])
+    .map((path) => files[path])
+    .filter((url): url is string => !!url);
   const logoUrl = request.logo_path ? files[request.logo_path] : "";
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-h-[90vh] overflow-y-auto rounded-3xl sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle className="font-display text-2xl text-plum">{request.business_name}</DialogTitle>
+          <DialogTitle className="font-display text-2xl text-plum">
+            {request.business_name}
+          </DialogTitle>
           <DialogDescription>
             {request.profiles?.full_name || "Cliente"}
             {request.profiles?.email ? ` · ${request.profiles.email}` : ""} ·{" "}
@@ -276,7 +299,9 @@ function RequestDialog({ request, onClose }: { request: AdminRequest; onClose: (
 
           <div>
             <p className="text-sm font-medium text-plum">Sobre o negócio</p>
-            <p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">{request.description || "—"}</p>
+            <p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">
+              {request.description || "—"}
+            </p>
           </div>
 
           <div className="grid gap-2 text-sm">
@@ -293,7 +318,9 @@ function RequestDialog({ request, onClose }: { request: AdminRequest; onClose: (
           {request.references_text ? (
             <div>
               <p className="text-sm font-medium text-plum">Referências</p>
-              <p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">{request.references_text}</p>
+              <p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">
+                {request.references_text}
+              </p>
             </div>
           ) : null}
 
@@ -313,7 +340,11 @@ function RequestDialog({ request, onClose }: { request: AdminRequest; onClose: (
                 ) : null}
                 {photos.map((url, index) => (
                   <a key={url} href={url} target="_blank" rel="noreferrer">
-                    <img src={url} alt={`Foto ${index + 1}`} className="size-20 rounded-xl border object-cover" />
+                    <img
+                      src={url}
+                      alt={`Foto ${index + 1}`}
+                      className="size-20 rounded-xl border object-cover"
+                    />
                   </a>
                 ))}
               </div>
@@ -330,7 +361,9 @@ function RequestDialog({ request, onClose }: { request: AdminRequest; onClose: (
                   onClick={() => setStatus(value)}
                   className={cn(
                     "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
-                    status === value ? "border-transparent bg-brand text-primary-foreground" : "bg-card text-secondary-foreground",
+                    status === value
+                      ? "border-transparent bg-brand text-primary-foreground"
+                      : "bg-card text-secondary-foreground",
                   )}
                 >
                   {REQUEST_STATUS[value].label}
@@ -364,7 +397,8 @@ function RequestDialog({ request, onClose }: { request: AdminRequest; onClose: (
               </Button>
             ) : (
               <Button variant="outline" onClick={createProject} disabled={creating}>
-                {creating ? <Loader2 className="animate-spin" /> : <Plus />} Criar site para a cliente
+                {creating ? <Loader2 className="animate-spin" /> : <Plus />} Criar site para a
+                cliente
               </Button>
             )}
           </div>

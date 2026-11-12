@@ -53,7 +53,15 @@ export const Route = createFileRoute("/_authenticated/painel/projeto/$id")({
   component: ProjectEditor,
 });
 
-function Card({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
+function Card({
+  title,
+  hint,
+  children,
+}: {
+  title: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
   return (
     <section className="rounded-[2rem] border bg-card p-6 shadow-card sm:p-8">
       <h2 className="text-xl font-semibold text-plum">{title}</h2>
@@ -116,14 +124,16 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [galleryKey]);
 
-  const patch = (values: Partial<SiteContent>) => setContent((current) => ({ ...current, ...values }));
+  const patch = (values: Partial<SiteContent>) =>
+    setContent((current) => ({ ...current, ...values }));
 
   const preview = useMemo<SiteContent>(
     () => ({ ...content, segmentOther: segment === "outro" ? content.segmentOther : "" }),
     [content, segment],
   );
 
-  const publicUrl = slug && typeof window !== "undefined" ? `${window.location.origin}/s/${slug}` : "";
+  const publicUrl =
+    slug && typeof window !== "undefined" ? `${window.location.origin}/s/${slug}` : "";
 
   async function persist(): Promise<boolean> {
     if (name.trim().length < 2) {
@@ -141,7 +151,9 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
       content: {
         ...content,
         segmentOther: segment === "outro" ? content.segmentOther.trim() : "",
-        services: content.services.filter((service) => service.title.trim() || service.description.trim()),
+        services: content.services.filter(
+          (service) => service.title.trim() || service.description.trim(),
+        ),
       } as unknown as Json,
     };
     const { error } = await supabase.from("projects").update(payload).eq("id", project.id);
@@ -215,7 +227,10 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
   }
 
   function removePhoto(path: string) {
-    setContent((current) => ({ ...current, gallery: current.gallery.filter((item) => item !== path) }));
+    setContent((current) => ({
+      ...current,
+      gallery: current.gallery.filter((item) => item !== path),
+    }));
     void supabase.storage.from("uploads").remove([path]);
   }
 
@@ -227,7 +242,10 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
 
   return (
     <AppShell>
-      <Link to="/painel" className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link
+        to="/painel"
+        className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+      >
         <ArrowLeft className="size-4" /> Voltar ao painel
       </Link>
 
@@ -262,7 +280,8 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
 
       {!canEdit ? (
         <div className="mb-6 rounded-2xl bg-lilac-soft px-5 py-4 text-sm text-secondary-foreground">
-          A administradora está criando este site. Assim que ele for liberado, você poderá editar tudo por aqui.
+          A administradora está criando este site. Assim que ele for liberado, você poderá editar
+          tudo por aqui.
         </div>
       ) : null}
 
@@ -270,7 +289,9 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
         <div className="mb-6 flex flex-wrap items-center gap-2 rounded-2xl border bg-soft px-5 py-4 text-sm">
           <Globe className="size-4 text-lilac" />
           <span className="text-muted-foreground">Endereço do seu site:</span>
-          <code className="rounded-lg bg-card px-2 py-1 text-secondary-foreground">{publicUrl}</code>
+          <code className="rounded-lg bg-card px-2 py-1 text-secondary-foreground">
+            {publicUrl}
+          </code>
         </div>
       ) : null}
 
@@ -280,7 +301,12 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
             <Card title="Identidade" hint="O nome e o segmento do seu negócio.">
               <div className="space-y-2">
                 <Label htmlFor="site-name">Nome do site</Label>
-                <Input id="site-name" value={name} onChange={(event) => setName(event.target.value)} className="h-11 rounded-xl" />
+                <Input
+                  id="site-name"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  className="h-11 rounded-xl"
+                />
               </div>
               <div className="space-y-3">
                 <Label>Segmento</Label>
@@ -302,11 +328,14 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
                       aria-pressed={template === style.value}
                       className={cn(
                         "rounded-2xl border bg-card px-4 py-3 text-left text-sm transition-all hover:border-ring",
-                        template === style.value && "border-transparent bg-soft shadow-candy ring-2 ring-ring",
+                        template === style.value &&
+                          "border-transparent bg-soft shadow-candy ring-2 ring-ring",
                       )}
                     >
                       <span className="block font-medium text-plum">{style.label}</span>
-                      <span className="mt-0.5 block text-xs text-muted-foreground">{style.description}</span>
+                      <span className="mt-0.5 block text-xs text-muted-foreground">
+                        {style.description}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -337,7 +366,10 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
               </div>
             </Card>
 
-            <Card title="Serviços e produtos" hint="Mostre o que você oferece, com preço se quiser.">
+            <Card
+              title="Serviços e produtos"
+              hint="Mostre o que você oferece, com preço se quiser."
+            >
               <div className="space-y-3">
                 {content.services.map((service, index) => (
                   <div key={index} className="rounded-2xl border bg-soft p-4">
@@ -383,7 +415,11 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
                         variant="ghost"
                         size="icon"
                         aria-label={`Remover serviço ${index + 1}`}
-                        onClick={() => patch({ services: content.services.filter((_, position) => position !== index) })}
+                        onClick={() =>
+                          patch({
+                            services: content.services.filter((_, position) => position !== index),
+                          })
+                        }
                       >
                         <Trash2 />
                       </Button>
@@ -393,7 +429,11 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => patch({ services: [...content.services, { title: "", description: "", price: "" }] })}
+                  onClick={() =>
+                    patch({
+                      services: [...content.services, { title: "", description: "", price: "" }],
+                    })
+                  }
                 >
                   <Plus /> Adicionar serviço
                 </Button>
@@ -430,7 +470,11 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
                     htmlFor="gallery-input"
                     className="flex size-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-2xl border border-dashed bg-soft text-xs text-muted-foreground hover:border-ring"
                   >
-                    {uploading ? <Loader2 className="size-5 animate-spin" /> : <ImagePlus className="size-5 text-lilac" />}
+                    {uploading ? (
+                      <Loader2 className="size-5 animate-spin" />
+                    ) : (
+                      <ImagePlus className="size-5 text-lilac" />
+                    )}
                     {uploading ? "Enviando" : "Adicionar"}
                   </label>
                 ) : null}
@@ -539,17 +583,29 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
           </SitePreviewCard>
           <div className="mt-4 flex flex-wrap gap-2">
             {status === "publicado" ? (
-              <Button variant="outline" className="flex-1" onClick={handleUnpublish} disabled={publishing}>
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={handleUnpublish}
+                disabled={publishing}
+              >
                 <Undo2 /> Despublicar
               </Button>
             ) : (
-              <Button variant="brand" className="flex-1" onClick={handlePublish} disabled={publishing || !canEdit}>
+              <Button
+                variant="brand"
+                className="flex-1"
+                onClick={handlePublish}
+                disabled={publishing || !canEdit}
+              >
                 {publishing ? <Loader2 className="animate-spin" /> : <Rocket />}
                 {slug ? "Republicar site" : "Publicar meu site"}
               </Button>
             )}
           </div>
-          <p className="mt-2 text-center text-xs text-muted-foreground">A prévia muda enquanto você digita.</p>
+          <p className="mt-2 text-center text-xs text-muted-foreground">
+            A prévia muda enquanto você digita.
+          </p>
         </div>
       </div>
     </AppShell>

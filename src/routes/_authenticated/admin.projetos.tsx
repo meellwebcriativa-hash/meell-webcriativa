@@ -39,7 +39,10 @@ export const Route = createFileRoute("/_authenticated/admin/projetos")({
   head: () => ({
     meta: [
       { title: "Projetos — Web Criativa" },
-      { name: "description", content: "Todos os sites das clientes: em produção, liberados e publicados." },
+      {
+        name: "description",
+        content: "Todos os sites das clientes: em produção, liberados e publicados.",
+      },
       { property: "og:title", content: "Projetos — Web Criativa" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -53,7 +56,11 @@ type AdminProject = Awaited<ReturnType<NonNullable<typeof adminProjectsQuery.que
 
 const FILTERS = ["todos", "rascunho", "em_producao", "liberado", "publicado"] as const;
 
-const dateFmt = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short", year: "numeric" });
+const dateFmt = new Intl.DateTimeFormat("pt-BR", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
 
 function ProjectsPage() {
   const { data: projects } = useSuspenseQuery(adminProjectsQuery);
@@ -101,12 +108,15 @@ function ProjectsPage() {
             onClick={() => setFilter(value)}
             className={cn(
               "whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground",
-              filter === value && "bg-brand text-primary-foreground shadow-candy hover:bg-brand hover:text-primary-foreground",
+              filter === value &&
+                "bg-brand text-primary-foreground shadow-candy hover:bg-brand hover:text-primary-foreground",
             )}
           >
             {value === "todos" ? "Todos" : PROJECT_STATUS[value].label}
             <span className="ml-2 text-xs opacity-70">
-              {value === "todos" ? projects.length : projects.filter((project) => project.status === value).length}
+              {value === "todos"
+                ? projects.length
+                : projects.filter((project) => project.status === value).length}
             </span>
           </button>
         ))}
@@ -114,7 +124,8 @@ function ProjectsPage() {
 
       {visible.length === 0 ? (
         <EmptyState icon={<FolderHeart />} title="Nenhum projeto aqui">
-          Quando uma cliente criar um site ou você criar a partir de um pedido, ele aparece nesta lista.
+          Quando uma cliente criar um site ou você criar a partir de um pedido, ele aparece nesta
+          lista.
         </EmptyState>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
@@ -123,8 +134,12 @@ function ProjectsPage() {
               key={project.id}
               project={project}
               busy={busyId === project.id}
-              onSetStatus={(status) => run(project.id, () => setProjectStatus(project.id, status), "Status atualizado.")}
-              onPublish={() => run(project.id, () => publishProject(project.id, project.name), "Site publicado.")}
+              onSetStatus={(status) =>
+                run(project.id, () => setProjectStatus(project.id, status), "Status atualizado.")
+              }
+              onPublish={() =>
+                run(project.id, () => publishProject(project.id, project.name), "Site publicado.")
+              }
               onDelete={() =>
                 run(
                   project.id,
@@ -157,7 +172,10 @@ function ProjectCard({
   onDelete: () => void;
 }) {
   const content = parseSiteContent(project.content);
-  const publicUrl = project.slug && typeof window !== "undefined" ? `${window.location.origin}/s/${project.slug}` : "";
+  const publicUrl =
+    project.slug && typeof window !== "undefined"
+      ? `${window.location.origin}/s/${project.slug}`
+      : "";
 
   return (
     <div className="flex flex-col rounded-3xl border bg-card p-6 shadow-card">
@@ -175,7 +193,9 @@ function ProjectCard({
         {segmentLabel(project.segment, content.segmentOther)}
         {project.template ? ` · ${styleLabel(project.template)}` : ""}
       </p>
-      <p className="mt-1 text-xs text-muted-foreground">Atualizado em {dateFmt.format(new Date(project.updated_at))}</p>
+      <p className="mt-1 text-xs text-muted-foreground">
+        Atualizado em {dateFmt.format(new Date(project.updated_at))}
+      </p>
 
       {publicUrl ? (
         <a
@@ -196,13 +216,23 @@ function ProjectCard({
         </Button>
 
         {project.status !== "em_producao" ? (
-          <Button variant="outline" size="sm" disabled={busy} onClick={() => onSetStatus("em_producao")}>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={busy}
+            onClick={() => onSetStatus("em_producao")}
+          >
             <Hammer /> Em produção
           </Button>
         ) : null}
 
         {project.status !== "liberado" ? (
-          <Button variant="outline" size="sm" disabled={busy} onClick={() => onSetStatus("liberado")}>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={busy}
+            onClick={() => onSetStatus("liberado")}
+          >
             <Undo2 /> Liberar
           </Button>
         ) : null}
@@ -221,7 +251,12 @@ function ProjectCard({
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="ghost" size="sm" aria-label={`Excluir ${project.name}`} disabled={busy}>
+            <Button
+              variant="ghost"
+              size="sm"
+              aria-label={`Excluir ${project.name}`}
+              disabled={busy}
+            >
               <Trash2 />
             </Button>
           </AlertDialogTrigger>
@@ -229,7 +264,8 @@ function ProjectCard({
             <AlertDialogHeader>
               <AlertDialogTitle>Excluir este projeto?</AlertDialogTitle>
               <AlertDialogDescription>
-                O site "{project.name}" será apagado para a cliente também. Essa ação não pode ser desfeita.
+                O site "{project.name}" será apagado para a cliente também. Essa ação não pode ser
+                desfeita.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
