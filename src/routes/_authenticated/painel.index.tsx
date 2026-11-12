@@ -1,6 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowRight, ExternalLink, FolderHeart, Heart, Inbox, PenLine, Trash2, Wand2 } from "lucide-react";
+import {
+  ArrowRight,
+  ExternalLink,
+  FolderHeart,
+  Heart,
+  Inbox,
+  MessageCircle,
+  PenLine,
+  Trash2,
+  Wand2,
+} from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell, PageTitle } from "@/components/app/AppShell";
@@ -20,6 +30,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { PROJECT_STATUS, segmentLabel, styleLabel } from "@/lib/constants";
 import { meQuery, myProjectsQuery, myRequestsQuery } from "@/lib/queries";
+import { linkSitePersonalizado } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/_authenticated/painel/")({
   head: () => ({
@@ -87,20 +98,31 @@ function ClientDashboard() {
             Começar agora <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
           </span>
         </Link>
-        <Link
-          to="/painel/solicitar"
-          className="group rounded-[2rem] bg-brand p-8 text-primary-foreground shadow-candy transition-all hover:-translate-y-1"
-        >
-          <div className="flex size-14 items-center justify-center rounded-2xl bg-card/25">
-            <Heart className="size-6" />
-          </div>
-          <p className="mt-6 text-xs font-medium tracking-[0.2em] uppercase opacity-80">Opção 2</p>
-          <h2 className="mt-1 text-2xl font-semibold">Quero um site personalizado</h2>
-          <p className="mt-2 opacity-90">Conte sobre o seu negócio e a Meell Criativa desenvolve o site para você.</p>
-          <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium">
-            Fazer meu pedido <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-          </span>
-        </Link>
+        <div className="flex flex-col">
+          <a
+            href={linkSitePersonalizado}
+            target="_blank"
+            rel="noreferrer"
+            className="group flex-1 rounded-[2rem] bg-brand p-8 text-primary-foreground shadow-candy transition-all hover:-translate-y-1 hover:bg-brand-hover"
+          >
+            <div className="flex size-14 items-center justify-center rounded-2xl bg-card/25">
+              <Heart className="size-6" />
+            </div>
+            <p className="mt-6 text-xs font-medium tracking-[0.2em] uppercase opacity-80">Opção 2</p>
+            <h2 className="mt-1 text-2xl font-semibold">Quero um site personalizado</h2>
+            <p className="mt-2 opacity-90">Fale com a Meell Criativa no WhatsApp e a gente desenvolve o site para você.</p>
+            <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium">
+              <MessageCircle className="size-4" /> Pedir pelo WhatsApp
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+            </span>
+          </a>
+          <Link
+            to="/painel/solicitar"
+            className="mt-3 inline-flex items-center justify-center gap-1.5 rounded-full bg-secondary px-4 py-2 text-xs font-medium text-secondary-foreground transition-colors hover:bg-lilac-soft"
+          >
+            Ou preencher o formulário aqui
+          </Link>
+        </div>
       </div>
 
       <section className="mt-12">
@@ -173,7 +195,8 @@ function ClientDashboard() {
         <h2 className="mb-4 text-2xl font-semibold text-plum">Meus pedidos de site personalizado</h2>
         {requests.length === 0 ? (
           <EmptyState icon={<Inbox />} title="Nenhum pedido enviado">
-            Prefere que a gente faça por você? Use a opção "Quero um site personalizado".
+            Prefere que a gente faça por você? Use a opção "Quero um site personalizado" e fale com a gente no
+            WhatsApp.
           </EmptyState>
         ) : (
           <div className="divide-y rounded-3xl border bg-card shadow-card">

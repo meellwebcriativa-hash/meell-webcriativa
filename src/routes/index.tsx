@@ -1,9 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Brush, Eye, Globe, Heart, Lock, Sparkles, Wand2 } from "lucide-react";
+import {
+  ArrowRight,
+  Brush,
+  Eye,
+  Globe,
+  Heart,
+  Lock,
+  MessageCircle,
+  Sparkles,
+  Wand2,
+} from "lucide-react";
 import hero from "@/assets/hero-web-criativa.jpg";
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { SEGMENTS } from "@/lib/constants";
+import { linkPedirCadastro, linkSitePersonalizado } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -86,7 +97,10 @@ function Landing() {
       <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
         <h2 className="text-center text-3xl font-semibold text-plum sm:text-4xl">Duas formas de ter seu site</h2>
         <div className="mt-10 grid gap-6 md:grid-cols-2">
-          <div className="rounded-[2rem] border bg-card p-8 shadow-card">
+          <Link
+            to="/auth"
+            className="group flex flex-col rounded-[2rem] border bg-card p-8 shadow-card transition-all hover:-translate-y-1 hover:shadow-candy"
+          >
             <div className="flex size-12 items-center justify-center rounded-2xl bg-lilac-soft text-secondary-foreground">
               <Wand2 />
             </div>
@@ -94,8 +108,16 @@ function Landing() {
             <p className="mt-2 text-muted-foreground">
               Siga etapas guiadas: escolha o segmento, o modelo, personalize e veja a prévia mudar na hora.
             </p>
-          </div>
-          <div className="rounded-[2rem] bg-brand p-8 text-primary-foreground shadow-candy">
+            <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary">
+              Começar agora <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+            </span>
+          </Link>
+          <a
+            href={linkSitePersonalizado}
+            target="_blank"
+            rel="noreferrer"
+            className="group flex flex-col rounded-[2rem] bg-brand p-8 text-primary-foreground shadow-candy transition-all hover:-translate-y-1 hover:bg-brand-hover"
+          >
             <div className="flex size-12 items-center justify-center rounded-2xl bg-card/25">
               <Heart />
             </div>
@@ -103,7 +125,11 @@ function Landing() {
             <p className="mt-2 opacity-90">
               Conte sobre o seu negócio, envie logo e fotos, e a Meell Criativa desenvolve tudo para você aprovar.
             </p>
-          </div>
+            <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium">
+              <MessageCircle className="size-4" /> Pedir pelo WhatsApp
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+            </span>
+          </a>
         </div>
       </section>
 
@@ -137,11 +163,18 @@ function Landing() {
         <Eye className="mx-auto size-8 text-pink" />
         <h2 className="mt-4 text-3xl font-semibold text-plum sm:text-4xl">Já recebeu seu convite?</h2>
         <p className="mt-3 text-muted-foreground">Entre com o e-mail e a senha que você recebeu da Meell Criativa.</p>
-        <Button asChild variant="brand" size="lg" className="mt-8">
-          <Link to="/auth">
-            Acessar minha conta <ArrowRight />
-          </Link>
-        </Button>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <Button asChild variant="brand" size="lg">
+            <Link to="/auth">
+              Acessar minha conta <ArrowRight />
+            </Link>
+          </Button>
+          <Button asChild variant="soft" size="lg">
+            <a href={linkPedirCadastro} target="_blank" rel="noreferrer">
+              <MessageCircle /> Ainda não tenho convite
+            </a>
+          </Button>
+        </div>
       </section>
 
       <footer className="border-t py-8">

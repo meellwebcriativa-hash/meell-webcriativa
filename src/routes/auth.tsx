@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Loader2, Lock, Mail } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Loader2, Lock, Mail, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/brand/Logo";
@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { friendlyAuthError } from "@/lib/auth-errors";
 import { meQuery } from "@/lib/queries";
 import { safeRedirectPath } from "@/lib/schemas";
+import { linkPedirCadastro } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (search: Record<string, unknown>): { redirect?: string } => {
@@ -37,6 +38,7 @@ function AuthPage() {
   const [mode, setMode] = useState<"login" | "forgot">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -109,15 +111,43 @@ function AuthPage() {
                       Esqueci minha senha
                     </button>
                   </div>
-                  <Input id="password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} className="h-11 rounded-xl" />
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="current-password"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="h-11 rounded-xl pr-11"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((visible) => !visible)}
+                      aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                      aria-pressed={showPassword}
+                      title={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                      className="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-xl text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    </button>
+                  </div>
                 </div>
                 <Button type="submit" variant="brand" size="lg" className="w-full" disabled={loading}>
                   {loading ? <Loader2 className="animate-spin" /> : <Lock />} Entrar
                 </Button>
               </form>
-              <p className="mt-6 text-center text-xs text-muted-foreground">
-                A plataforma é exclusiva para convidadas. Ainda não tem acesso? Fale com a Meell Criativa.
-              </p>
+              <div className="mt-6 space-y-3">
+                <p className="text-center text-xs text-muted-foreground">
+                  A plataforma é exclusiva para convidadas. Ainda não tem acesso? Peça seu cadastro para a Meell
+                  Criativa.
+                </p>
+                <Button asChild variant="soft" className="w-full">
+                  <a href={linkPedirCadastro} target="_blank" rel="noreferrer">
+                    <MessageCircle /> Quero meu cadastro pelo WhatsApp
+                  </a>
+                </Button>
+              </div>
             </>
           ) : (
             <>
