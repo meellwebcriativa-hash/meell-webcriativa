@@ -28,3 +28,6 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+- Dark mode is the `.dark` class on `<html>`, applied before paint by `THEME_INIT_SCRIPT` in `src/routes/__root.tsx` and toggled only through `ThemeToggle` (one instance per page, in the header) — separate toggles keep their own state and drift out of sync.

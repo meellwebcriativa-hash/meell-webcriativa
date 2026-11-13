@@ -4,13 +4,13 @@
 - [x] Visual da marca, logo, página inicial
 - [x] Login por convite, esqueci minha senha, nova senha
 - [x] Painel da cliente, criar projeto (passo 1-2), pedir site personalizado, minha conta
-- [ ] Admin: solicitações e projetos
-- [ ] Criar conta da administradora
-- [ ] Testes das regras
+- [x] Admin: solicitações e projetos
+- [x] Criar conta da administradora
+- [x] Testes das regras
 
 ## Pedido 13/11
-- [ ] Conferir arquivos vindos do GitHub: theme-toggle, SegmentPreview, painel.criar, SiteRenderer (modo escuro)
-- [ ] Ativar modo escuro
+- [x] Conferir arquivos vindos do GitHub: theme-toggle, SegmentPreview, painel.criar, SiteRenderer (modo escuro)
+- [x] Ativar modo escuro
 - [ ] Build e publicar
 
 ## Etapa 2
