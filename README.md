@@ -1,6 +1,6 @@
 # Meell Webcriativa
 
-Quero que crie um logotipo com as letras WC mas quero que fique profissional e remeta a mais um produto da Meell Criativa, priorizando as cores lilás e rosa em degrade, premium e profissional
+**Logotipo WC Premium** - Logo profissional com as letras "WC" em gradiente lilás/rosa, criado especificamente para a marca Web Criativa da Meell Criativa.
 
 This project was built with [Lovable](https://lovable.dev).
 

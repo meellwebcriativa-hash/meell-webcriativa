@@ -9,6 +9,9 @@ import {
   whatsappLink,
   type SiteContent,
 } from "@/lib/site-content";
+import { designForSegment, type SiteDesign } from "@/lib/site-designs";
+import { HeroLayoutRenderer } from "@/components/site/HeroLayoutRenderer";
+import { ServicesLayoutRenderer } from "@/components/site/ServicesLayoutRenderer";
 
 export type SiteRendererProps = {
   name: string;
@@ -33,6 +36,7 @@ export function SiteRenderer({
   darkMode = false,
 }: SiteRendererProps) {
   const theme = themeFor(template);
+  const design: SiteDesign = designForSegment(segment);
   const segmentText = segmentLabel(segment, content.segmentOther);
   const safe = parseSiteContent(content);
   const businessName = name.trim() || (preview ? "Nome do seu negócio" : "Meu negócio");
@@ -78,7 +82,7 @@ export function SiteRenderer({
   ].filter((item) => item.show);
 
   const muted = { color: darkMode ? "#a0a0a0" : theme.muted };
-  const accentStyle = { color: darkMode ? "#f0a0a0" : theme.accent };
+  const accentStyle = { color: darkMode ? "#ff8080" : theme.accent };
 
   const headerBg = darkMode ? "#1e1e1e" : theme.bg;
   const heroBg = darkMode ? `linear-gradient(135deg, #2d2d2d 0%, #1e1e1e 100%)` : theme.heroBg;
@@ -128,59 +132,18 @@ export function SiteRenderer({
         </div>
       </header>
 
-      <section style={{ background: heroBg }} className="px-5 py-16 sm:py-24">
-        <div className="mx-auto max-w-5xl">
-          <p style={{ color: darkMode ? "#ff8080" : theme.accent }} className="text-[0.7rem] font-semibold tracking-[0.25em] uppercase">
-            {segmentText}
-          </p>
-          <h1
-            style={{ fontFamily: theme.display, lineHeight: 1.03 }}
-            className="mt-4 text-4xl font-semibold sm:text-6xl"
-          >
-            {businessName}
-          </h1>
-          <p style={muted} className="mt-5 max-w-xl text-lg">
-            {tagline}
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            {whatsappHref ? (
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noreferrer"
-                style={{
-                  background: darkMode ? "#e04040" : theme.accent,
-                  color: "#ffffff",
-                }}
-                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium"
-              >
-                <MessageCircle className="size-4" /> Falar no WhatsApp
-              </a>
-            ) : (
-              <span
-                style={{
-                  background: darkMode ? "#e04040" : theme.accent,
-                  color: "#ffffff",
-                }}
-                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium opacity-70"
-              >
-                <MessageCircle className="size-4" /> Falar no WhatsApp
-              </span>
-            )}
-            {instagramHref ? (
-              <a
-                href={instagramHref}
-                target="_blank"
-                rel="noreferrer"
-                style={{ borderColor, color: textColor }}
-                className="inline-flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-medium"
-              >
-                <Instagram className="size-4" /> Instagram
-              </a>
-            ) : null}
-          </div>
-        </div>
-      </section>
+      <HeroLayoutRenderer
+        layout={design.hero}
+        name={businessName}
+        segmentText={segmentText}
+        tagline={tagline}
+        theme={theme}
+        muted={muted}
+        accentStyle={accentStyle}
+        darkMode={darkMode}
+        whatsappHref={whatsappHref}
+        instagramHref={instagramHref}
+      />
 
       {about && (
         <section id="sobre" className="px-5 py-14 sm:py-20">
@@ -200,38 +163,15 @@ export function SiteRenderer({
       )}
 
       {services.length > 0 && (
-        <section id="servicos" style={{ background: surfaceBg }} className="px-5 py-14 sm:py-20">
-          <div className="mx-auto max-w-5xl">
-            <h2 style={{ fontFamily: theme.display }} className="text-3xl font-semibold sm:text-4xl">
-              Serviços
-            </h2>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {services.map((service, index) => (
-                <article
-                  key={`${service.title}-${index}`}
-                  style={{
-                    borderColor,
-                    background: serviceCardBg,
-                    borderRadius: theme.heroRadius,
-                  }}
-                  className="flex flex-col border p-6"
-                >
-                  <h3 className="text-lg font-semibold">{service.title || "Serviço"}</h3>
-                  {service.description && (
-                    <p style={muted} className="mt-2 text-sm leading-relaxed">
-                      {service.description}
-                    </p>
-                  )}
-                  {service.price && (
-                    <p style={accentStyle} className="mt-4 text-sm font-semibold">
-                      {service.price}
-                    </p>
-                  )}
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
+        <ServicesLayoutRenderer
+          layout={design.services}
+          services={services}
+          theme={theme}
+          darkMode={darkMode}
+          muted={muted}
+          accentStyle={accentStyle}
+          borderColor={borderColor}
+        />
       )}
 
       {gallery.length > 0 && (

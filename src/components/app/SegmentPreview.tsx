@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { ExternalLink, Heart, Scissors, Camera, Briefcase, ShoppingCart, FileText, Coffee, Utensils, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { SITE_DESIGNS } from "@/lib/site-designs";
+import { SITE_DESIGNS, designForSegment } from "@/lib/site-designs";
 
 type SegmentPreviewProps = {
   segment: string;
@@ -135,6 +135,7 @@ export function SegmentPreview({ segment, segmentOther, style, className }: Segm
   const previewStyle = STYLE_GRADIENTS[style] ?? "bg-gradient-to-br from-slate-50 via-white to-slate-50";
   const segmentGradient = SEGMENT_GRADIENTS[segment] ?? "from-pink/30 via-lilac/25 to-pink/15";
   const textStyle = style === "moderno" ? "text-white" : "text-slate-700";
+  const design = designForSegment(segment);
 
   const skeletonElements = useMemo(() => {
     const count = 4;
@@ -164,36 +165,28 @@ export function SegmentPreview({ segment, segmentOther, style, className }: Segm
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url("${SITE_DESIGNS[segment as keyof typeof SITE_DESIGNS]?.image || SITE_DESIGNS.outro.image}")`,
-          filter: "brightness(0.9) contrast(1.05)",
+          backgroundImage: `url("${design.image}")`,
+          filter: "brightness(0.85) contrast(1.1) saturate(1.2)",
         }}
       />
-      <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-5 transition-opacity" />
-      <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-5 transition-opacity" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-10 transition-opacity" />
+      <div className="absolute inset-0 bg-gradient-to-l opacity-0 group-hover:opacity-5 transition-opacity" />
       <div className="relative p-6">
         <div
           className={cn("flex items-center gap-3 mb-4 transition-transform duration-300 group-hover:-translate-y-1")}
           style={{
             animationDelay: "100ms",
-            background: "rgba(255, 255, 255, 0.8)",
+            background: "rgba(255, 255, 255, 0.75)",
             backdropFilter: "blur(10px)",
             borderRadius: "12px",
             border: "1px solid",
-            borderColor: info.category === "Estética" ? "#ec4899" : 
-                          info.category === "Beleza" ? "#ec4899" :
-                          info.category === "Varejo" ? "#3b82f6" :
-                          info.category === "Artesanato" ? "#a855f7" :
-                          info.category === "Comida" ? "#f59e0b" :
-                          info.category === "Gastronomia" ? "#10b981" :
-                          info.category === "Homens" ? "#6b7280" :
-                          info.category === "Criativo" ? "#6b7280" :
-                          info.category === "Negócio" ? "#20c997" :
-                          "#94a3b8",
+            borderColor: `rgba(255, 255, 255, 0.5)`,
           }}
         >
           <div
-            className={cn("flex size-10 items-center justify-center rounded-2xl", "bg-white/20")}
-            style={{ backdropFilter: "blur(10px)" }}
+            className={cn("flex size-10 items-center justify-center rounded-2xl")}
+            style={{ backdropFilter: "blur(5px)", background: "rgba(255, 255, 255, 0.3)" }}
           >
             <Icon className={cn("size-5", textStyle)} />
           </div>
@@ -201,12 +194,12 @@ export function SegmentPreview({ segment, segmentOther, style, className }: Segm
         </div>
 
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-xs font-medium uppercase tracking-wider opacity-60">{info.category}</span>
+          <span className="text-xs font-medium uppercase tracking-wider opacity-70">{info.category}</span>
           <div className="h-1 w-8 bg-border/30 rounded-full" />
         </div>
 
         <p
-          className={cn("text-sm mb-4", style === "moderno" ? "text-white/70" : "text-black/70 dark:text-white/70")}
+          className={cn("text-sm mb-4", style === "moderno" ? "text-white/70" : "text-white/80")}
         >
           {info.description}
         </p>
