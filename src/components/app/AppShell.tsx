@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { meQuery } from "@/lib/queries";
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const navLink =
   "inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground";
@@ -49,6 +50,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <LogOut />
               <span className="max-md:hidden">Sair</span>
             </Button>
+            <ThemeToggle className="ml-1" />
           </nav>
         </div>
       </header>

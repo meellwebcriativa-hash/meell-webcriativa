@@ -14,6 +14,7 @@ import hero from "@/assets/hero-web-criativa.jpg";
 import { Logo } from "@/components/brand/Logo";
 import { PageBackdrop } from "@/components/brand/PageBackdrop";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { SEGMENTS } from "@/lib/constants";
 import { linkPedirCadastro, linkSitePersonalizado } from "@/lib/whatsapp";
 
@@ -49,9 +50,12 @@ function Landing() {
       <PageBackdrop />
       <header className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Logo />
-        <Button asChild variant="soft">
-          <Link to="/auth">Entrar</Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Button asChild variant="soft">
+            <Link to="/auth">Entrar</Link>
+          </Button>
+        </div>
       </header>
 
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-6 pb-16 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:pt-12">
