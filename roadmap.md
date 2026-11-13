@@ -11,7 +11,7 @@
 ## Pedido 13/11
 - [x] Conferir arquivos vindos do GitHub: theme-toggle, SegmentPreview, painel.criar, SiteRenderer (modo escuro)
 - [x] Ativar modo escuro
-- [ ] Build e publicar
+- [x] Build e publicar
 
 ## Etapa 2
 - [ ] Criador completo com prévia ao vivo, salvamento, publicação em /nomedonegocio
