@@ -137,23 +137,6 @@ export function SegmentPreview({ segment, segmentOther, style, className }: Segm
   const textStyle = style === "moderno" ? "text-white" : "text-slate-700";
   const design = designForSegment(segment);
 
-  const skeletonElements = useMemo(() => {
-    const count = 4;
-    return Array.from({ length: count }, (_, i) => (
-      <div
-        key={i}
-        className="relative h-32 rounded-2xl overflow-hidden"
-        style={{ animationDelay: `${i * 200}ms` }}
-      >
-        <div
-          className={cn("absolute inset-0 animate-pulse", segmentGradient, "bg-clip-padding")}
-          style={{ animationDuration: "2s" }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/0 to-black/10" />
-      </div>
-    ));
-  }, [segmentGradient]);
-
   return (
     <div
       className={cn(
@@ -162,14 +145,14 @@ export function SegmentPreview({ segment, segmentOther, style, className }: Segm
         className,
       )}
     >
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url("${design.image}")`,
-          filter: "brightness(0.85) contrast(1.1) saturate(1.2)",
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-transparent" />
+      <div className="absolute inset-0">
+        <img
+          src={design.image}
+          alt={`Preview de ${displayLabel}`}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-transparent" />
+      </div>
       <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-10 transition-opacity" />
       <div className="absolute inset-0 bg-gradient-to-l opacity-0 group-hover:opacity-5 transition-opacity" />
       <div className="relative p-6">
@@ -177,16 +160,16 @@ export function SegmentPreview({ segment, segmentOther, style, className }: Segm
           className={cn("flex items-center gap-3 mb-4 transition-transform duration-300 group-hover:-translate-y-1")}
           style={{
             animationDelay: "100ms",
-            background: "rgba(255, 255, 255, 0.75)",
+            background: "rgba(255, 255, 255, 0.85)",
             backdropFilter: "blur(10px)",
             borderRadius: "12px",
             border: "1px solid",
-            borderColor: `rgba(255, 255, 255, 0.5)`,
+            borderColor: `rgba(255, 255, 255, 0.6)`,
           }}
         >
           <div
             className={cn("flex size-10 items-center justify-center rounded-2xl")}
-            style={{ backdropFilter: "blur(5px)", background: "rgba(255, 255, 255, 0.3)" }}
+            style={{ backdropFilter: "blur(5px)", background: "rgba(255, 255, 255, 0.4)" }}
           >
             <Icon className={cn("size-5", textStyle)} />
           </div>
@@ -204,7 +187,11 @@ export function SegmentPreview({ segment, segmentOther, style, className }: Segm
           {info.description}
         </p>
 
-        <div className="space-y-3">{skeletonElements}</div>
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-8 rounded bg-white/30" style={{ animationDelay: `${i * 100}ms` }} />
+          ))}
+        </div>
 
         <div className="mt-4 flex items-center justify-between">
           <span className="text-xs font-medium uppercase tracking-wider opacity-80">
