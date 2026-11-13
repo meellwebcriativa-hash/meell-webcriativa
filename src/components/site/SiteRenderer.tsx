@@ -166,7 +166,7 @@ export function SiteRenderer({
         <ServicesLayoutRenderer
           layout={design.services}
           services={services}
-          serviceImages={gallery}
+          serviceImageMap={urls}
           theme={theme}
           darkMode={darkMode}
           muted={muted}

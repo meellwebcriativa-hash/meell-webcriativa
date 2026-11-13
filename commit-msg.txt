@@ -1,1 +1,1 @@
-﻿Corrigir carregamento de imagens de servicos - resolver URLs corretas
+﻿Corrigir mapeamento de imagens de produtos - usar serviceImageMap correto

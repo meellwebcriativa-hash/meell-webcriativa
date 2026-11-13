@@ -4,7 +4,7 @@ import { type SiteTheme, type SiteService } from "@/lib/site-content";
 type ServicesSectionProps = {
   design: SiteDesign;
   services: SiteService[];
-  serviceImages?: string[];
+  serviceImageMap?: Record<string, string>;
   theme: SiteTheme;
   darkMode: boolean;
   muted: { color: string };
@@ -14,16 +14,12 @@ type ServicesSectionProps = {
 
 type ServicesLayout = SiteDesign["services"];
 
-function getServiceImageUrl(service: SiteService, images: string[] | undefined) {
-  if (!images || images.length === 0) return null;
-  const index = images.findIndex(img => img === service.image);
-  if (index >= 0 && index < images.length) {
-    return images[index];
-  }
-  return service.image || null;
+function getServiceImageUrl(service: SiteService, imageMap: Record<string, string> | undefined) {
+  if (!imageMap || !service.image) return null;
+  return imageMap[service.image] || service.image || null;
 }
 
-export function ServicesLayoutRenderer({ layout, services, serviceImages, theme, darkMode, muted, accentStyle, borderColor }: ServicesSectionProps) {
+export function ServicesLayoutRenderer({ layout, services, serviceImageMap, theme, darkMode, muted, accentStyle, borderColor }: ServicesSectionProps) {
   switch (layout) {
     case "pricelist":
       return (
@@ -81,29 +77,32 @@ export function ServicesLayoutRenderer({ layout, services, serviceImages, theme,
             Produtos em destaque
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((service, index) => (
-              <article key={index} className="overflow-hidden rounded-3xl border bg-card shadow-card" style={{ borderColor }}>
-                {service.image ? (
-                  <img
-                    src={service.image}
-                    alt={service.title || "Produto"}
-                    className="h-48 w-full object-cover"
-                  />
-                ) : (
-                  <div
-                    className="flex h-48 w-full items-center justify-center bg-soft text-muted-foreground"
-                    style={{ borderColor }}
-                  >
-                    <span className="text-xs">{service.title || "Produto"}</span>
+            {services.map((service, index) => {
+              const imageUrl = getServiceImageUrl(service, serviceImageMap);
+              return (
+                <article key={index} className="overflow-hidden rounded-3xl border bg-card shadow-card" style={{ borderColor }}>
+                  {imageUrl ? (
+                    <img
+                      src={imageUrl}
+                      alt={service.title || "Produto"}
+                      className="h-48 w-full object-cover"
+                    />
+                  ) : (
+                    <div
+                      className="flex h-48 w-full items-center justify-center bg-soft text-muted-foreground"
+                      style={{ borderColor }}
+                    >
+                      <span className="text-xs">{service.title || "Produto"}</span>
+                    </div>
+                  )}
+                  <div className="p-4">
+                    <h3 className="font-semibold text-base">{service.title || "Produto"}</h3>
+                    {service.description && <p style={muted} className="mt-1 text-sm">{service.description}</p>}
+                    {service.price && <p style={accentStyle} className="mt-2 text-sm font-semibold">{service.price}</p>}
                   </div>
-                )}
-                <div className="p-4">
-                  <h3 className="font-semibold text-base">{service.title || "Produto"}</h3>
-                  {service.description && <p style={muted} className="mt-1 text-sm">{service.description}</p>}
-                  {service.price && <p style={accentStyle} className="mt-2 text-sm font-semibold">{service.price}</p>}
-                </div>
-              </article>
-            ))}
+                </article>
+              );
+            })}
           </div>
         </section>
       );
