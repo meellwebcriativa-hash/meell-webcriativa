@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { ExternalLink, Heart, Scissors, Camera, Briefcase, ShoppingCart, FileText, Coffee, Utensils, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SITE_DESIGNS } from "@/lib/site-designs";
 
 type SegmentPreviewProps = {
   segment: string;
@@ -14,8 +15,6 @@ type SegmentInfo = {
   label: string;
   description: string;
   category: string;
-  backgroundStyle: string;
-  headerStyle: string;
 };
 
 const SEGMENT_PREVIEWS: Record<string, SegmentInfo> = {
@@ -163,9 +162,13 @@ export function SegmentPreview({ segment, segmentOther, style, className }: Segm
       )}
     >
       <div
-        className="absolute inset-0"
-        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect fill='%23ffffff'/%3E%3C/svg%3E")` }}
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `url("${SITE_DESIGNS[segment as keyof typeof SITE_DESIGNS]?.image || SITE_DESIGNS.outro.image}")`,
+          filter: "brightness(0.9) contrast(1.05)",
+        }}
       />
+      <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-5 transition-opacity" />
       <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-5 transition-opacity" />
       <div className="relative p-6">
         <div
