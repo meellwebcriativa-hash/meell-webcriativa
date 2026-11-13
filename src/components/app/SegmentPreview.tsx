@@ -121,13 +121,20 @@ const SEGMENT_GRADIENTS: Record<string, string> = {
   outro: "from-pink/30 via-lilac/25 to-pink/15",
 };
 
+const FALLBACK_INFO: SegmentInfo = {
+  icon: Sparkles,
+  label: "Seu negócio",
+  description: "Modelo neutro e elegante sob medida",
+  category: "Personalizado",
+};
+
 export function SegmentPreview({ segment, segmentOther, style, className }: SegmentPreviewProps) {
-  const info = SEGMENT_PREVIEWS[segment] ?? SEGMENT_PREVIEWS.outro;
+  const info = SEGMENT_PREVIEWS[segment] ?? FALLBACK_INFO;
   const Icon = info.icon;
   const displayLabel = segment === "outro" && segmentOther ? segmentOther : info.label;
 
-  const previewStyle = STYLE_GRADIENTS[style] ?? STYLE_GRADIENTS.elegante;
-  const segmentGradient = SEGMENT_GRADIENTS[segment] ?? SEGMENT_GRADIENTS.outro;
+  const previewStyle = STYLE_GRADIENTS[style] ?? "bg-gradient-to-br from-slate-50 via-white to-slate-50";
+  const segmentGradient = SEGMENT_GRADIENTS[segment] ?? "from-pink/30 via-lilac/25 to-pink/15";
   const textStyle = style === "moderno" ? "text-white" : "text-slate-700";
 
   const skeletonElements = useMemo(() => {
