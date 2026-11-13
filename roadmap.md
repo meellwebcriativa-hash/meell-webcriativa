@@ -14,4 +14,4 @@
 - [x] Build e publicar
 
 ## Etapa 2
-- [ ] Criador completo com prévia ao vivo, salvamento, publicação em /nomedonegocio
+- [x] Criador completo com prévia ao vivo, salvamento, publicação em /s/nomedonegocio (veio do GitHub)
