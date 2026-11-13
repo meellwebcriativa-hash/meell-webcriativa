@@ -1,1 +1,1 @@
-﻿Corrigir resolucao de URLs de imagens de servicos
+﻿Corrigir carregamento de imagens - atualizar galleryUrls apos upload de servico

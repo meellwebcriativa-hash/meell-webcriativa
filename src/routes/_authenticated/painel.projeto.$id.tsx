@@ -477,6 +477,8 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
                             setUploading(true);
                             try {
                               const paths = await uploadUserFiles(me!.id, "projects", [file]);
+                              const urls = await signedUrls(paths);
+                              setGalleryUrls((current) => ({ ...current, ...urls }));
                               const services = [...content.services];
                               services[index] = { ...service, image: paths[0] };
                               patch({ services });
