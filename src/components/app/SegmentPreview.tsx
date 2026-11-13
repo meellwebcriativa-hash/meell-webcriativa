@@ -14,6 +14,8 @@ type SegmentInfo = {
   label: string;
   description: string;
   category: string;
+  backgroundStyle: string;
+  headerStyle: string;
 };
 
 const SEGMENT_PREVIEWS: Record<string, SegmentInfo> = {
@@ -22,60 +24,80 @@ const SEGMENT_PREVIEWS: Record<string, SegmentInfo> = {
     label: "Salão de Beleza",
     description: "Fotos de ambientes, cortes e colorações",
     category: "Estética",
+    backgroundStyle: "bg-gradient-to-br from-pink-50 via-white to-rose-50",
+    headerStyle: "bg-white/80 backdrop-blur-sm border-pink-200",
   },
   manicure: {
     icon: Heart,
     label: "Manicure",
     description: "Unhas artísticas e texturas suaves de gel",
     category: "Beleza",
+    backgroundStyle: "bg-gradient-to-br from-rose-50 via-white to-pink-50",
+    headerStyle: "bg-white/80 backdrop-blur-sm border-rose-200",
   },
   loja: {
     icon: ShoppingCart,
     label: "Loja",
     description: "Vitrine virtual com produtos em destaque",
     category: "Varejo",
+    backgroundStyle: "bg-gradient-to-br from-blue-50 via-white to-indigo-50",
+    headerStyle: "bg-white/80 backdrop-blur-sm border-blue-200",
   },
   papelaria: {
     icon: FileText,
     label: "Papelaria",
     description: "Convites e planners com detalhes personalizados",
     category: "Artesanato",
+    backgroundStyle: "bg-gradient-to-br from-lilac-50 via-white to-pink-50",
+    headerStyle: "bg-white/80 backdrop-blur-sm border-lilac-200",
   },
   confeitaria: {
     icon: Coffee,
     label: "Confeitaria",
     description: "Detalhes de bolos e doces em close",
     category: "Comida",
+    backgroundStyle: "bg-gradient-to-br from-amber-50 via-white to-orange-50",
+    headerStyle: "bg-white/80 backdrop-blur-sm border-amber-200",
   },
   restaurante: {
     icon: Utensils,
     label: "Restaurante",
     description: "Pratos coloridos e ambiente do restaurante",
     category: "Gastronomia",
+    backgroundStyle: "bg-gradient-to-br from-green-50 via-white to-emerald-50",
+    headerStyle: "bg-white/80 backdrop-blur-sm border-green-200",
   },
   barbearia: {
     icon: Scissors,
     label: "Barbearia",
     description: "Corte clássico e detalhes do atendimento",
     category: "Homens",
+    backgroundStyle: "bg-gradient-to-br from-gray-50 via-white to-slate-50",
+    headerStyle: "bg-white/80 backdrop-blur-sm border-gray-200",
   },
   fotografia: {
     icon: Camera,
     label: "Fotografia",
     description: "Cenas cinematográficas de ensaio",
     category: "Criativo",
+    backgroundStyle: "bg-gradient-to-br from-black/5 via-white to-gray-50",
+    headerStyle: "bg-white/80 backdrop-blur-sm border-gray-300",
   },
   servicos: {
     icon: Briefcase,
     label: "Serviços",
     description: "Soluções profissionais para o seu negócio",
     category: "Negócio",
+    backgroundStyle: "bg-gradient-to-br from-teal-50 via-white to-cyan-50",
+    headerStyle: "bg-white/80 backdrop-blur-sm border-teal-200",
   },
   outro: {
     icon: Sparkles,
     label: "Seu negócio",
     description: "Modelo neutro e elegante sob medida",
     category: "Personalizado",
+    backgroundStyle: "bg-gradient-to-br from-grey-50 via-white to-slate-50",
+    headerStyle: "bg-white/80 backdrop-blur-sm border-slate-200",
   },
 };
 
@@ -140,11 +162,28 @@ export function SegmentPreview({ segment, segmentOther, style, className }: Segm
       <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-5 transition-opacity" />
       <div className="relative p-6">
         <div
-          className="flex items-center gap-3 mb-4 transition-transform duration-300 group-hover:-translate-y-1"
-          style={{ animationDelay: "100ms" }}
+          className={cn("flex items-center gap-3 mb-4 transition-transform duration-300 group-hover:-translate-y-1")}
+          style={{
+            animationDelay: "100ms",
+            background: "rgba(255, 255, 255, 0.8)",
+            backdropFilter: "blur(10px)",
+            borderRadius: "12px",
+            border: "1px solid",
+            borderColor: info.category === "Estética" ? "#ec4899" : 
+                          info.category === "Beleza" ? "#ec4899" :
+                          info.category === "Varejo" ? "#3b82f6" :
+                          info.category === "Artesanato" ? "#a855f7" :
+                          info.category === "Comida" ? "#f59e0b" :
+                          info.category === "Gastronomia" ? "#10b981" :
+                          info.category === "Homens" ? "#6b7280" :
+                          info.category === "Criativo" ? "#6b7280" :
+                          info.category === "Negócio" ? "#20c997" :
+                          "#94a3b8",
+          }}
         >
           <div
-            className={cn("flex size-10 items-center justify-center rounded-2xl", "bg-white/20 backdrop-blur-sm")}
+            className={cn("flex size-10 items-center justify-center rounded-2xl", "bg-white/20")}
+            style={{ backdropFilter: "blur(10px)" }}
           >
             <Icon className={cn("size-5", textStyle)} />
           </div>
