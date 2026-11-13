@@ -1,7 +1,30 @@
-import { Check, Sparkles } from "lucide-react";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SEGMENTS } from "@/lib/constants";
 import { Input } from "@/components/ui/input";
+import salaoImg from "@/assets/templates/salao.jpg";
+import manicureImg from "@/assets/templates/manicure.jpg";
+import lojaImg from "@/assets/templates/loja.jpg";
+import papelariaImg from "@/assets/templates/papelaria.jpg";
+import confeitariaImg from "@/assets/templates/confeitaria.jpg";
+import restauranteImg from "@/assets/templates/restaurante.jpg";
+import barbeariaImg from "@/assets/templates/barbearia.jpg";
+import fotografiaImg from "@/assets/templates/fotografia.jpg";
+import servicosImg from "@/assets/templates/servicos.jpg";
+import outroImg from "@/assets/templates/outro.jpg";
+
+const SEGMENT_IMAGES: Record<string, string> = {
+  salao: salaoImg,
+  manicure: manicureImg,
+  loja: lojaImg,
+  papelaria: papelariaImg,
+  confeitaria: confeitariaImg,
+  restaurante: restauranteImg,
+  barbearia: barbeariaImg,
+  fotografia: fotografiaImg,
+  servicos: servicosImg,
+  outro: outroImg,
+};
 
 const SEGMENT_DESCRIPTIONS: Record<string, string> = {
   salao: "Corte, coloração, tratamentos e estética",
@@ -34,6 +57,8 @@ export function SegmentPicker({
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {SEGMENTS.map((s) => {
           const isSelected = value === s.value;
+          const img = SEGMENT_IMAGES[s.value];
+
           return (
             <button
               key={s.value}
@@ -47,13 +72,15 @@ export function SegmentPicker({
             >
               <div
                 className={cn(
-                  "flex size-10 items-center justify-center rounded-xl transition-all",
+                  "flex size-10 overflow-hidden rounded-xl transition-all",
                   isSelected ? "bg-brand text-primary-foreground" : "bg-secondary text-secondary-foreground",
                 )}
               >
-                <span className="text-2xl" aria-hidden>
-                  {s.emoji}
-                </span>
+                <img
+                  src={img}
+                  alt={s.label}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <span className="text-center leading-tight max-w-full">
                 <span className="block font-semibold">{s.label}</span>
@@ -75,7 +102,6 @@ export function SegmentPicker({
       {value === "outro" ? (
         <div className="mt-4">
           <div className="flex items-center gap-2">
-            <Sparkles className="size-4 text-pink flex-shrink-0" />
             <Input
               autoFocus
               placeholder="Conte qual é o seu tipo de negócio"
