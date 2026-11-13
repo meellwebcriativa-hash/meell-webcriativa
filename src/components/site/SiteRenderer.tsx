@@ -310,11 +310,17 @@ export function SiteRenderer({
 
       <footer style={{ borderColor }} className="mt-auto border-t px-5 py-8">
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-2 text-xs sm:flex-row">
-          <span style={muted}>
-            © {new Date().getFullYear()} {businessName}
-          </span>
+          <div className="flex items-center gap-4">
+            <span style={muted}>
+              © {new Date().getFullYear()} {businessName}
+            </span>
+            <span style={muted} className="hidden sm:inline-flex items-center gap-1">
+              <span className="opacity-50">•</span>
+              <span>Criado com Web Criativa</span>
+            </span>
+          </div>
           <a href="/" style={muted} className="underline-offset-4 hover:underline">
-            Site criado com Web Criativa
+            Feito com IA
           </a>
         </div>
       </footer>
