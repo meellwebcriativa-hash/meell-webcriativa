@@ -56,6 +56,7 @@ export function parseSiteContent(raw: unknown): SiteContent {
           title: text(item["title"]).trim(),
           description: text(item["description"]).trim(),
           price: text(item["price"]).trim(),
+          image: text(item["image"]).trim() || undefined,
         }))
         .filter((item) => item.title || item.description)
     : [];
