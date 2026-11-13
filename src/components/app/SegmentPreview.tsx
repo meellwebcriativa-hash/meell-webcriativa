@@ -1,7 +1,15 @@
-import { useMemo } from "react";
-import { ExternalLink, Heart, Scissors, Camera, Briefcase, ShoppingCart, FileText, Coffee, Utensils, Sparkles } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { SITE_DESIGNS, designForSegment } from "@/lib/site-designs";
+import salaoImg from "@/assets/templates/salao.jpg";
+import manicureImg from "@/assets/templates/manicure.jpg";
+import lojaImg from "@/assets/templates/loja.jpg";
+import papelariaImg from "@/assets/templates/papelaria.jpg";
+import confeitariaImg from "@/assets/templates/confeitaria.jpg";
+import restauranteImg from "@/assets/templates/restaurante.jpg";
+import barbeariaImg from "@/assets/templates/barbearia.jpg";
+import fotografiaImg from "@/assets/templates/fotografia.jpg";
+import servicosImg from "@/assets/templates/servicos.jpg";
+import outroImg from "@/assets/templates/outro.jpg";
 
 type SegmentPreviewProps = {
   segment: string;
@@ -11,92 +19,72 @@ type SegmentPreviewProps = {
 };
 
 type SegmentInfo = {
-  icon: React.ComponentType<{ className?: string }>;
   label: string;
   description: string;
   category: string;
+  image: string;
 };
 
 const SEGMENT_PREVIEWS: Record<string, SegmentInfo> = {
   salao: {
-    icon: Scissors,
     label: "Salão de Beleza",
     description: "Fotos de ambientes, cortes e colorações",
     category: "Estética",
-    backgroundStyle: "bg-gradient-to-br from-pink-50 via-white to-rose-50",
-    headerStyle: "bg-white/80 backdrop-blur-sm border-pink-200",
+    image: salaoImg,
   },
   manicure: {
-    icon: Heart,
     label: "Manicure",
     description: "Unhas artísticas e texturas suaves de gel",
     category: "Beleza",
-    backgroundStyle: "bg-gradient-to-br from-rose-50 via-white to-pink-50",
-    headerStyle: "bg-white/80 backdrop-blur-sm border-rose-200",
+    image: manicureImg,
   },
   loja: {
-    icon: ShoppingCart,
     label: "Loja",
     description: "Vitrine virtual com produtos em destaque",
     category: "Varejo",
-    backgroundStyle: "bg-gradient-to-br from-blue-50 via-white to-indigo-50",
-    headerStyle: "bg-white/80 backdrop-blur-sm border-blue-200",
+    image: lojaImg,
   },
   papelaria: {
-    icon: FileText,
     label: "Papelaria",
     description: "Convites e planners com detalhes personalizados",
     category: "Artesanato",
-    backgroundStyle: "bg-gradient-to-br from-lilac-50 via-white to-pink-50",
-    headerStyle: "bg-white/80 backdrop-blur-sm border-lilac-200",
+    image: papelariaImg,
   },
   confeitaria: {
-    icon: Coffee,
     label: "Confeitaria",
     description: "Detalhes de bolos e doces em close",
     category: "Comida",
-    backgroundStyle: "bg-gradient-to-br from-amber-50 via-white to-orange-50",
-    headerStyle: "bg-white/80 backdrop-blur-sm border-amber-200",
+    image: confeitariaImg,
   },
   restaurante: {
-    icon: Utensils,
     label: "Restaurante",
     description: "Pratos coloridos e ambiente do restaurante",
     category: "Gastronomia",
-    backgroundStyle: "bg-gradient-to-br from-green-50 via-white to-emerald-50",
-    headerStyle: "bg-white/80 backdrop-blur-sm border-green-200",
+    image: restauranteImg,
   },
   barbearia: {
-    icon: Scissors,
     label: "Barbearia",
     description: "Corte clássico e detalhes do atendimento",
     category: "Homens",
-    backgroundStyle: "bg-gradient-to-br from-gray-50 via-white to-slate-50",
-    headerStyle: "bg-white/80 backdrop-blur-sm border-gray-200",
+    image: barbeariaImg,
   },
   fotografia: {
-    icon: Camera,
     label: "Fotografia",
     description: "Cenas cinematográficas de ensaio",
     category: "Criativo",
-    backgroundStyle: "bg-gradient-to-br from-black/5 via-white to-gray-50",
-    headerStyle: "bg-white/80 backdrop-blur-sm border-gray-300",
+    image: fotografiaImg,
   },
   servicos: {
-    icon: Briefcase,
     label: "Serviços",
     description: "Soluções profissionais para o seu negócio",
     category: "Negócio",
-    backgroundStyle: "bg-gradient-to-br from-teal-50 via-white to-cyan-50",
-    headerStyle: "bg-white/80 backdrop-blur-sm border-teal-200",
+    image: servicosImg,
   },
   outro: {
-    icon: Sparkles,
     label: "Seu negócio",
     description: "Modelo neutro e elegante sob medida",
     category: "Personalizado",
-    backgroundStyle: "bg-gradient-to-br from-grey-50 via-white to-slate-50",
-    headerStyle: "bg-white/80 backdrop-blur-sm border-slate-200",
+    image: outroImg,
   },
 };
 
@@ -107,35 +95,19 @@ const STYLE_GRADIENTS: Record<string, string> = {
   minimalista: "bg-gradient-to-br from-white via-gray-50 to-white",
 };
 
-const SEGMENT_GRADIENTS: Record<string, string> = {
-  salao: "from-pink/30 via-pink/20 to-pink/10",
-  manicure: "from-lilac/30 via-pink/25 to-pink/10",
-  loja: "from-brand/30 via-lilac/25 to-pink/15",
-  papelaria: "from-pink/30 via-lilac/25 to-pink/15",
-  confeitaria: "from-pink/40 via-pink/25 to-pink/15",
-  restaurante: "from-lilac/30 via-pink/25 to-pink/15",
-  barbearia: "from-brand/30 via-lilac/25 to-pink/15",
-  fotografia: "from-pink/30 via-pink/20 to-lilac/15",
-  servicos: "from-lilac/30 via-brand/25 to-pink/15",
-  outro: "from-pink/30 via-lilac/25 to-pink/15",
-};
-
 const FALLBACK_INFO: SegmentInfo = {
-  icon: Sparkles,
   label: "Seu negócio",
   description: "Modelo neutro e elegante sob medida",
   category: "Personalizado",
+  image: outroImg,
 };
 
 export function SegmentPreview({ segment, segmentOther, style, className }: SegmentPreviewProps) {
   const info = SEGMENT_PREVIEWS[segment] ?? FALLBACK_INFO;
-  const Icon = info.icon;
   const displayLabel = segment === "outro" && segmentOther ? segmentOther : info.label;
 
-  const previewStyle = STYLE_GRADIENTS[style] ?? "bg-gradient-to-br from-slate-50 via-white to-slate-50";
-  const segmentGradient = SEGMENT_GRADIENTS[segment] ?? "from-pink/30 via-lilac/25 to-pink/15";
+  const previewStyle = STYLE_GRADIENTS[style] ?? "bg-gradient-to-br from-slate-50 via-white to-pink-15";
   const textStyle = style === "moderno" ? "text-white" : "text-slate-700";
-  const design = designForSegment(segment);
 
   return (
     <div
@@ -147,7 +119,7 @@ export function SegmentPreview({ segment, segmentOther, style, className }: Segm
     >
       <div className="absolute inset-0">
         <img
-          src={design.image}
+          src={info.image}
           alt={`Preview de ${displayLabel}`}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
@@ -171,7 +143,11 @@ export function SegmentPreview({ segment, segmentOther, style, className }: Segm
             className={cn("flex size-10 items-center justify-center rounded-2xl")}
             style={{ backdropFilter: "blur(5px)", background: "rgba(255, 255, 255, 0.4)" }}
           >
-            <Icon className={cn("size-5", textStyle)} />
+            <img
+              src={info.image}
+              alt={displayLabel}
+              className="w-5 h-5 object-cover rounded"
+            />
           </div>
           <h3 className={cn("font-display text-xl font-semibold", textStyle)}>{displayLabel}</h3>
         </div>
