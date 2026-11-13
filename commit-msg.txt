@@ -1,0 +1,1 @@
+﻿Adicionar suporte a imagens editaveis para produtos e animacoes de fundo

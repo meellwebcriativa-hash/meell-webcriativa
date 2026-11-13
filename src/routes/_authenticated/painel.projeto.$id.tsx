@@ -439,12 +439,23 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
 
             <Card
               title="Serviços e produtos"
-              hint="Mostre o que você oferece, com preço se quiser."
+              hint="Mostre o que você oferece, com preço e foto se quiser."
             >
               <div className="space-y-3">
                 {content.services.map((service, index) => (
                   <div key={index} className="rounded-2xl border bg-soft p-4">
-                    <div className="flex items-start gap-2">
+                    <div className="flex items-start gap-4">
+                      <div className="flex size-16 items-center justify-center rounded-xl border bg-card">
+                        {service.image ? (
+                          <img
+                            src={galleryUrls[service.image] || service.image}
+                            alt={service.title || "Produto"}
+                            className="h-full w-full rounded-xl object-cover"
+                          />
+                        ) : (
+                          <ImagePlus className="size-6 text-lilac" />
+                        )}
+                      </div>
                       <div className="flex-1 space-y-2">
                         <Input
                           value={service.title}
@@ -495,6 +506,11 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
                         <Trash2 />
                       </Button>
                     </div>
+                    {service.image && (
+                      <div className="mt-2 text-xs text-muted-foreground">
+                        Imagem do produto adicionada. Toque para mudar.
+                      </div>
+                    )}
                   </div>
                 ))}
                 <Button
@@ -508,6 +524,9 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
                 >
                   <Plus /> Adicionar serviço
                 </Button>
+              </div>
+              <div className="mt-4 rounded-2xl border border-dashed bg-soft p-3 text-xs text-muted-foreground">
+                Fotos de produtos ficam na galeria abaixo. Você pode usar a mesma galeria para os serviços.
               </div>
             </Card>
 

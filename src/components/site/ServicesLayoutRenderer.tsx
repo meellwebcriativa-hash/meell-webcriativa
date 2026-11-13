@@ -73,11 +73,20 @@ export function ServicesLayoutRenderer({ layout, services, theme, darkMode, mute
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service, index) => (
               <article key={index} className="overflow-hidden rounded-3xl border bg-card shadow-card" style={{ borderColor }}>
-                <img
-                  src={SITE_DESIGNS.loja.image}
-                  alt={service.title || "Produto"}
-                  className="h-48 w-full object-cover"
-                />
+                {service.image ? (
+                  <img
+                    src={service.image}
+                    alt={service.title || "Produto"}
+                    className="h-48 w-full object-cover"
+                  />
+                ) : (
+                  <div
+                    className="flex h-48 w-full items-center justify-center bg-soft text-muted-foreground"
+                    style={{ borderColor }}
+                  >
+                    <span className="text-xs">{service.title || "Produto"}</span>
+                  </div>
+                )}
                 <div className="p-4">
                   <h3 className="font-semibold text-base">{service.title || "Produto"}</h3>
                   {service.description && <p style={muted} className="mt-1 text-sm">{service.description}</p>}

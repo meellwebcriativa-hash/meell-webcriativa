@@ -5,6 +5,7 @@ export type SiteService = {
   title: string;
   description: string;
   price: string;
+  image?: string;
 };
 
 /**
