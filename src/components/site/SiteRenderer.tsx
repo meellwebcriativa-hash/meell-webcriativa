@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import { useMemo } from "react";
 import { Clock, Instagram, Mail, MapPin, MessageCircle } from "lucide-react";
 import { segmentLabel } from "@/lib/constants";
 import {
@@ -19,12 +19,10 @@ export type SiteRendererProps = {
   urls?: Record<string, string>;
   /** Shows gentle placeholders instead of empty gaps. */
   preview?: boolean;
+  /** Toggle dark mode preview */
+  darkMode?: boolean;
 };
 
-/**
- * Renders a client site. Used by the public page and by the live preview
- * inside the editor, so both always look exactly the same.
- */
 export function SiteRenderer({
   name,
   segment,
@@ -32,6 +30,7 @@ export function SiteRenderer({
   content,
   urls = {},
   preview = false,
+  darkMode = false,
 }: SiteRendererProps) {
   const theme = themeFor(template);
   const segmentText = segmentLabel(segment, content.segmentOther);
@@ -78,17 +77,27 @@ export function SiteRenderer({
     { key: "hours", icon: Clock, label: safe.hours, href: "", show: !!safe.hours.trim() },
   ].filter((item) => item.show);
 
-  const muted: CSSProperties = { color: theme.muted };
+  const muted = { color: darkMode ? "#a0a0a0" : theme.muted };
+  const accentStyle = { color: darkMode ? "#f0a0a0" : theme.accent };
+
+  const headerBg = darkMode ? "#1e1e1e" : theme.bg;
+  const heroBg = darkMode ? `linear-gradient(135deg, #2d2d2d 0%, #1e1e1e 100%)` : theme.heroBg;
+  const surfaceBg = darkMode ? "#2d2d2d" : theme.surface;
+  const serviceCardBg = darkMode ? "#252525" : theme.bg;
+  const footerBg = darkMode ? "#1e1e1e" : theme.bg;
+  const textColor = darkMode ? "#e0e0e0" : theme.ink;
+  const borderColor = darkMode ? "#404040" : theme.border;
 
   return (
     <div
-      style={{ background: theme.bg, color: theme.ink, fontFamily: theme.body }}
-      className="flex min-h-full flex-col"
+      style={{
+        background: darkMode ? "#121212" : theme.bg,
+        color: textColor,
+        fontFamily: theme.body,
+      }}
+      className="flex min-h-full flex-col dark:bg-slate-900 dark:text-slate-100"
     >
-      <header
-        style={{ borderColor: theme.border, background: theme.bg }}
-        className="sticky top-0 z-10 border-b"
-      >
+      <header style={{ borderColor, background: headerBg }} className="sticky top-0 z-10 border-b">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-4">
           <span style={{ fontFamily: theme.display }} className="truncate text-lg font-semibold">
             {businessName}
@@ -106,7 +115,10 @@ export function SiteRenderer({
                 href={whatsappHref}
                 target="_blank"
                 rel="noreferrer"
-                style={{ background: theme.accent, color: theme.accentInk }}
+                style={{
+                  background: darkMode ? "#e04040" : theme.accent,
+                  color: "#ffffff",
+                }}
                 className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium"
               >
                 <MessageCircle className="size-4" /> WhatsApp
@@ -116,12 +128,9 @@ export function SiteRenderer({
         </div>
       </header>
 
-      <section style={{ background: theme.heroBg }} className="px-5 py-16 sm:py-24">
+      <section style={{ background: heroBg }} className="px-5 py-16 sm:py-24">
         <div className="mx-auto max-w-5xl">
-          <p
-            style={{ color: theme.accent }}
-            className="text-[0.7rem] font-semibold tracking-[0.25em] uppercase"
-          >
+          <p style={{ color: darkMode ? "#ff8080" : theme.accent }} className="text-[0.7rem] font-semibold tracking-[0.25em] uppercase">
             {segmentText}
           </p>
           <h1
@@ -139,14 +148,20 @@ export function SiteRenderer({
                 href={whatsappHref}
                 target="_blank"
                 rel="noreferrer"
-                style={{ background: theme.accent, color: theme.accentInk }}
+                style={{
+                  background: darkMode ? "#e04040" : theme.accent,
+                  color: "#ffffff",
+                }}
                 className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium"
               >
                 <MessageCircle className="size-4" /> Falar no WhatsApp
               </a>
             ) : (
               <span
-                style={{ background: theme.accent, color: theme.accentInk }}
+                style={{
+                  background: darkMode ? "#e04040" : theme.accent,
+                  color: "#ffffff",
+                }}
                 className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium opacity-70"
               >
                 <MessageCircle className="size-4" /> Falar no WhatsApp
@@ -157,7 +172,7 @@ export function SiteRenderer({
                 href={instagramHref}
                 target="_blank"
                 rel="noreferrer"
-                style={{ borderColor: theme.border, color: theme.ink }}
+                style={{ borderColor, color: textColor }}
                 className="inline-flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-medium"
               >
                 <Instagram className="size-4" /> Instagram
@@ -167,82 +182,53 @@ export function SiteRenderer({
         </div>
       </section>
 
-      {(about || preview) && (
+      {about && (
         <section id="sobre" className="px-5 py-14 sm:py-20">
           <div className="mx-auto grid max-w-5xl gap-8 sm:grid-cols-[0.6fr_1fr]">
-            <h2
-              style={{ fontFamily: theme.display }}
-              className="text-3xl font-semibold sm:text-4xl"
-            >
+            <h2 style={{ fontFamily: theme.display }} className="text-3xl font-semibold sm:text-4xl">
               Sobre
             </h2>
             <div className="space-y-4 text-base leading-relaxed">
-              {about ? (
-                about.split(/\n{2,}/).map((paragraph, index) => (
-                  <p key={index} style={muted}>
-                    {paragraph}
-                  </p>
-                ))
-              ) : (
-                <p style={muted}>
-                  Conte aqui a história do seu negócio, o que você faz e o que torna o seu
-                  atendimento especial.
+              {about.split(/\n{2,}/).map((paragraph, index) => (
+                <p key={index} style={muted}>
+                  {paragraph}
                 </p>
-              )}
+              ))}
             </div>
           </div>
         </section>
       )}
 
-      {(services.length > 0 || preview) && (
-        <section
-          id="servicos"
-          style={{ background: theme.surface }}
-          className="px-5 py-14 sm:py-20"
-        >
+      {services.length > 0 && (
+        <section id="servicos" style={{ background: surfaceBg }} className="px-5 py-14 sm:py-20">
           <div className="mx-auto max-w-5xl">
-            <h2
-              style={{ fontFamily: theme.display }}
-              className="text-3xl font-semibold sm:text-4xl"
-            >
+            <h2 style={{ fontFamily: theme.display }} className="text-3xl font-semibold sm:text-4xl">
               Serviços
             </h2>
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {services.length > 0 ? (
-                services.map((service, index) => (
-                  <article
-                    key={`${service.title}-${index}`}
-                    style={{
-                      borderColor: theme.border,
-                      background: theme.bg,
-                      borderRadius: theme.heroRadius,
-                    }}
-                    className="flex flex-col border p-6"
-                  >
-                    <h3 className="text-lg font-semibold">{service.title || "Serviço"}</h3>
-                    {service.description ? (
-                      <p style={muted} className="mt-2 text-sm leading-relaxed">
-                        {service.description}
-                      </p>
-                    ) : null}
-                    {service.price ? (
-                      <p style={{ color: theme.accent }} className="mt-4 text-sm font-semibold">
-                        {service.price}
-                      </p>
-                    ) : null}
-                  </article>
-                ))
-              ) : (
+              {services.map((service, index) => (
                 <article
-                  style={{ borderColor: theme.border, borderRadius: theme.heroRadius }}
-                  className="border border-dashed p-6 sm:col-span-2 lg:col-span-3"
+                  key={`${service.title}-${index}`}
+                  style={{
+                    borderColor,
+                    background: serviceCardBg,
+                    borderRadius: theme.heroRadius,
+                  }}
+                  className="flex flex-col border p-6"
                 >
-                  <p style={muted} className="text-sm">
-                    Adicione os serviços ou produtos que você oferece — com descrição e preço, se
-                    quiser.
-                  </p>
+                  <h3 className="text-lg font-semibold">{service.title || "Serviço"}</h3>
+                  {service.description && (
+                    <p style={muted} className="mt-2 text-sm leading-relaxed">
+                      {service.description}
+                    </p>
+                  )}
+                  {service.price && (
+                    <p style={accentStyle} className="mt-4 text-sm font-semibold">
+                      {service.price}
+                    </p>
+                  )}
                 </article>
-              )}
+              ))}
             </div>
           </div>
         </section>
@@ -251,10 +237,7 @@ export function SiteRenderer({
       {gallery.length > 0 && (
         <section id="galeria" className="px-5 py-14 sm:py-20">
           <div className="mx-auto max-w-5xl">
-            <h2
-              style={{ fontFamily: theme.display }}
-              className="text-3xl font-semibold sm:text-4xl"
-            >
+            <h2 style={{ fontFamily: theme.display }} className="text-3xl font-semibold sm:text-4xl">
               Galeria
             </h2>
             <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -264,8 +247,8 @@ export function SiteRenderer({
                   src={url}
                   alt={`${businessName} — foto ${index + 1}`}
                   loading="lazy"
-                  style={{ borderColor: theme.border, borderRadius: theme.heroRadius }}
-                  className="aspect-square w-full border object-cover"
+                  style={{ borderColor }}
+                  className="aspect-square w-full border object-cover transition-shadow duration-200 hover:shadow-lg"
                 />
               ))}
             </div>
@@ -273,7 +256,7 @@ export function SiteRenderer({
         </section>
       )}
 
-      <section id="contato" style={{ background: theme.surface }} className="px-5 py-14 sm:py-20">
+      <section id="contato" style={{ background: surfaceBg }} className="px-5 py-14 sm:py-20">
         <div className="mx-auto max-w-5xl">
           <h2 style={{ fontFamily: theme.display }} className="text-3xl font-semibold sm:text-4xl">
             Vamos conversar?
@@ -282,26 +265,26 @@ export function SiteRenderer({
             Fale com a gente pelos canais abaixo — respondemos com todo carinho.
           </p>
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
-            {contact.length === 0 && preview ? (
+            {contact.length === 0 && preview && (
               <p
-                style={{ borderColor: theme.border, color: theme.muted }}
+                style={{ borderColor, color: darkMode ? "#a0a0a0" : theme.muted }}
                 className="rounded-2xl border border-dashed p-4 text-sm sm:col-span-2"
               >
-                Adicione WhatsApp, Instagram, e-mail e endereço no editor — os botões de contato
-                aparecem aqui.
+                Adicione WhatsApp, Instagram, e-mail e endereço no editor — os botões de contato aparecem
+                aqui.
               </p>
-            ) : null}
+            )}
             {contact.map((item) => {
               const Icon = item.icon;
               const body = (
                 <>
-                  <Icon className="size-4 shrink-0" style={{ color: theme.accent }} />
+                  <Icon className="size-4 shrink-0" style={{ color: darkMode ? "#f0a0a0" : theme.accent }} />
                   <span className="break-words">{item.label || "Seu contato aqui"}</span>
                 </>
               );
-              const style: CSSProperties = {
-                borderColor: theme.border,
-                color: theme.ink,
+              const itemStyle = {
+                borderColor,
+                color: textColor,
                 borderRadius: theme.heroRadius,
               };
               return item.href ? (
@@ -310,17 +293,13 @@ export function SiteRenderer({
                   href={item.href}
                   target={item.href.startsWith("http") ? "_blank" : undefined}
                   rel="noreferrer"
-                  style={style}
+                  style={itemStyle}
                   className="flex items-center gap-3 border p-4 text-sm"
                 >
                   {body}
                 </a>
               ) : (
-                <div
-                  key={item.key}
-                  style={style}
-                  className="flex items-center gap-3 border p-4 text-sm"
-                >
+                <div key={item.key} style={itemStyle} className="flex items-center gap-3 border p-4 text-sm">
                   {body}
                 </div>
               );
@@ -329,7 +308,7 @@ export function SiteRenderer({
         </div>
       </section>
 
-      <footer style={{ borderColor: theme.border }} className="mt-auto border-t px-5 py-8">
+      <footer style={{ borderColor }} className="mt-auto border-t px-5 py-8">
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-2 text-xs sm:flex-row">
           <span style={muted}>
             © {new Date().getFullYear()} {businessName}
@@ -343,14 +322,14 @@ export function SiteRenderer({
   );
 }
 
-export function SitePreviewCard({ children }: { children: ReactNode }) {
+export function SitePreviewCard({ children, darkMode }: { children: React.ReactNode; darkMode?: boolean }) {
   return (
-    <div className="overflow-hidden rounded-3xl border bg-card shadow-card">
-      <div className="flex items-center gap-1.5 border-b bg-soft px-4 py-2">
-        <span className="size-2.5 rounded-full bg-pink/70" />
-        <span className="size-2.5 rounded-full bg-lilac/60" />
-        <span className="size-2.5 rounded-full bg-muted-foreground/30" />
-        <span className="ml-2 text-[0.7rem] tracking-wide text-muted-foreground uppercase">
+    <div className="overflow-hidden rounded-3xl border-2 border-border/50 bg-card shadow-card dark:bg-slate-800">
+      <div className="flex items-center gap-1.5 border-b bg-soft px-4 py-2 dark:bg-slate-700">
+        <span className="size-2.5 rounded-full bg-pink/70 animate-pulse" style={{ animationDelay: "0ms" }} />
+        <span className="size-2.5 rounded-full bg-lilac/60 animate-pulse" style={{ animationDelay: "200ms" }} />
+        <span className="size-2.5 rounded-full bg-muted-foreground/30 animate-pulse" style={{ animationDelay: "400ms" }} />
+        <span className="ml-2 text-[0.7rem] tracking-wide text-muted-foreground uppercase dark:text-slate-300">
           Prévia ao vivo
         </span>
       </div>

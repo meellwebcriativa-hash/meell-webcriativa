@@ -7,7 +7,9 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Json } from "@/integrations/supabase/types";
 import { AppShell, PageTitle } from "@/components/app/AppShell";
 import { SegmentPicker } from "@/components/app/SegmentPicker";
+import { SegmentPreview } from "@/components/app/SegmentPreview";
 import { SitePreviewCard, SiteRenderer } from "@/components/site/SiteRenderer";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -54,6 +56,7 @@ function CreateSite() {
   const [segment, setSegment] = useState("");
   const [segmentOther, setSegmentOther] = useState("");
   const [style, setStyle] = useState("");
+  const [darkModePreview, setDarkModePreview] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const template = segment ? templateForSegment(segment) : null;
@@ -69,7 +72,6 @@ function CreateSite() {
       toast.error(firstError(parsed.error));
       return;
     }
-    // Cada nicho já tem um estilo que combina — a cliente pode trocar na etapa 2.
     if (!style) setStyle(templateForSegment(segment).style);
     setStep(2);
   }
@@ -82,7 +84,6 @@ function CreateSite() {
     }
     if (!me) return;
     setSaving(true);
-    // O projeto nasce já montado para o nicho escolhido.
     const content = starterContentFor(parsed.data.segment, parsed.data.segmentOther);
     const { data: created, error } = await supabase
       .from("projects")
@@ -108,7 +109,7 @@ function CreateSite() {
   }
 
   const preview = previewContent ? (
-    <SitePreviewCard>
+    <SitePreviewCard darkMode={darkModePreview}>
       <div onClickCapture={(event) => event.preventDefault()}>
         <SiteRenderer
           name={name.trim() || "Seu negócio"}
@@ -116,6 +117,7 @@ function CreateSite() {
           template={previewStyle}
           content={previewContent}
           preview
+          darkMode={darkModePreview}
         />
       </div>
     </SitePreviewCard>
@@ -123,12 +125,18 @@ function CreateSite() {
 
   return (
     <AppShell>
-      <Link
-        to="/painel"
-        className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="size-4" /> Voltar ao painel
-      </Link>
+      <div className="mb-6 flex items-center justify-between">
+        <Link
+          to="/painel"
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="size-4" /> Voltar ao painel
+        </Link>
+        <div className="flex items-center gap-3">
+          <ThemeToggle className="cursor-pointer" />
+        </div>
+      </div>
+
       <PageTitle
         eyebrow={`Etapa ${step} de 2`}
         title={step === 1 ? "Sobre o seu negócio" : "Escolha o estilo"}
@@ -138,7 +146,7 @@ function CreateSite() {
           : "Qual jeito combina mais com a sua marca? A prévia muda na hora."}
       </PageTitle>
 
-      <div className="mb-8 flex gap-2" aria-hidden>
+      <div className="mb-4 flex gap-2" aria-hidden>
         {[1, 2].map((n) => (
           <div
             key={n}
@@ -150,7 +158,7 @@ function CreateSite() {
       <div className="rounded-[2rem] border bg-card p-6 shadow-card sm:p-8">
         {step === 1 ? (
           <div className="space-y-8">
-            <div className="max-w-md space-y-2">
+            <div className="space-y-2">
               <Label htmlFor="site-name">Nome do seu negócio</Label>
               <Input
                 id="site-name"
@@ -159,9 +167,13 @@ function CreateSite() {
                 placeholder="Ex.: Ateliê da Ana"
                 className="h-11 rounded-xl"
               />
+              <p className="text-xs text-muted-foreground">
+                Como seu site aparecerá no início e na navegação
+              </p>
             </div>
+
             <div className="space-y-3">
-              <Label>Segmento</Label>
+              <Label>Segmento do seu negócio</Label>
               <SegmentPicker
                 value={segment}
                 other={segmentOther}
@@ -171,16 +183,19 @@ function CreateSite() {
             </div>
 
             {template && preview ? (
-              <div className="rounded-3xl border bg-soft p-4 sm:p-5">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="inline-flex items-center gap-2 text-sm font-medium text-plum">
-                    <Sparkles className="size-4 text-pink" />
-                    Modelo pronto de {segmentLabel(segment, segmentOther)}
+              <div className="rounded-3xl border-2 border-dashed bg-soft p-4 sm:p-6">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="size-5 text-pink" />
+                    <p className="text-sm font-medium text-plum">
+                      Modelo pronto de {segmentLabel(segment, segmentOther)}
+                    </p>
+                  </div>
+                  <p className="text-center text-sm text-muted-foreground max-w-md">
+                    {template.summary}
                   </p>
-                  <span className="text-xs text-muted-foreground">Você edita tudo depois</span>
+                  <div className="w-full max-w-2xl">{preview}</div>
                 </div>
-                <p className="mt-1 text-sm text-muted-foreground">{template.summary}</p>
-                <div className="mt-4">{preview}</div>
               </div>
             ) : (
               <div className="rounded-3xl border border-dashed bg-soft px-5 py-8 text-center text-sm text-muted-foreground">
@@ -196,45 +211,91 @@ function CreateSite() {
           </div>
         ) : (
           <div className="space-y-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-semibold text-plum">Escolha o Estilo Visual</h3>
+                <p className="text-sm text-muted-foreground">
+                  O estilo que você escolher afetará cores, tipografia e o visual geral do seu site.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setDarkModePreview(!darkModePreview)}
+                className={cn(
+                  "flex items-center gap-2 rounded-full px-4 py-2 text-sm transition-all",
+                  darkModePreview
+                    ? "bg-slate-800 text-white"
+                    : "bg-gray-100 text-slate-700",
+                )}
+                aria-pressed={darkModePreview}
+              >
+                {darkModePreview ? "🌙 Escuro" : "☀️ Claro"}
+              </button>
+            </div>
+
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:items-start">
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-4">
                 {SITE_STYLES.map((s) => (
-                  <button
-                    key={s.value}
-                    type="button"
-                    onClick={() => setStyle(s.value)}
-                    aria-pressed={style === s.value}
-                    className={cn(
-                      "relative flex items-start gap-4 rounded-3xl border bg-card p-5 text-left transition-all hover:border-ring",
-                      style === s.value &&
-                        "border-transparent bg-soft shadow-candy ring-2 ring-ring",
-                    )}
-                  >
-                    <span
-                      className={cn("size-14 shrink-0 rounded-2xl border", styleSwatches[s.value])}
-                      aria-hidden
-                    />
-                    <span>
-                      <span className="block font-display text-lg text-plum">{s.label}</span>
-                      <span className="mt-1 block text-sm text-muted-foreground">
-                        {s.description}
-                      </span>
-                    </span>
-                    {style === s.value ? (
-                      <span className="absolute top-4 right-4 flex size-6 items-center justify-center rounded-full bg-brand text-primary-foreground">
-                        <Check className="size-3.5" />
-                      </span>
-                    ) : null}
-                  </button>
+                  <div key={s.value}>
+                    <button
+                      type="button"
+                      onClick={() => setStyle(s.value)}
+                      aria-pressed={style === s.value}
+                      className={cn(
+                        "w-full group relative flex items-start gap-6 rounded-3xl border bg-card p-6 text-left transition-all duration-200",
+                        style === s.value
+                          ? "border-transparent bg-soft shadow-xl"
+                          : "border-border hover:border-ring",
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          "flex size-14 shrink-0 items-center justify-center rounded-2xl border",
+                          styleSwatches[s.value],
+                        )}
+                        aria-hidden
+                      >
+                        <span className="font-display text-base font-semibold text-plum" aria-hidden>
+                          <div className="flex items-center justify-center">
+                            {style === s.value ? "✓" : s.value.charAt(0).toUpperCase()}
+                          </div>
+                        </span>
+                      </div>
+                      <div className="flex-1">
+                        <span className="block font-display text-lg text-plum">{s.label}</span>
+                        <span className="mt-1 block text-sm text-muted-foreground">
+                          {s.description}
+                        </span>
+                      </div>
+                      {style === s.value && (
+                        <div className="absolute top-4 right-4 flex size-6 items-center justify-center rounded-full bg-brand text-primary-foreground">
+                          <Check className="size-3.5" />
+                        </div>
+                      )}
+                    </button>
+                  </div>
                 ))}
               </div>
-              <div className="lg:sticky lg:top-24">
-                {preview}
-                <p className="mt-2 text-center text-xs text-muted-foreground">
-                  Prévia do modelo de {segmentLabel(segment, segmentOther)} no estilo escolhido.
+
+              <div className="space-y-4">
+                <SegmentPreview
+                  segment={segment}
+                  segmentOther={segmentOther}
+                  style={style || template?.style || "elegante"}
+                />
+                <p className="text-center text-xs text-muted-foreground">
+                  Prévia do modelo de {segmentLabel(segment, segmentOther)} no estilo{" "}
+                  {style === "moderno"
+                    ? "Moderno"
+                    : style === "delicado"
+                    ? "Delicado"
+                    : style === "minimalista"
+                    ? "Minimalista"
+                    : "Elegante"}.
                 </p>
               </div>
             </div>
+
             <div className="flex flex-wrap justify-between gap-3">
               <Button variant="outline" size="lg" onClick={() => setStep(1)}>
                 <ArrowLeft /> Voltar
