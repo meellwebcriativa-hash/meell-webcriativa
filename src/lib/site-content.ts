@@ -24,6 +24,8 @@ export type SiteContent = {
   services: SiteService[];
   /** Storage paths inside the `uploads` bucket. */
   gallery: string[];
+  /** Optional hero image path - overrides the default segment image. */
+  heroImage?: string;
 };
 
 export const emptySiteContent: SiteContent = {
@@ -37,6 +39,7 @@ export const emptySiteContent: SiteContent = {
   hours: "",
   services: [],
   gallery: [],
+  heroImage: "",
 };
 
 function text(value: unknown) {
@@ -77,6 +80,7 @@ export function parseSiteContent(raw: unknown): SiteContent {
     hours: text(source["hours"]),
     services,
     gallery,
+    heroImage: text(source["heroImage"]),
   };
 }
 

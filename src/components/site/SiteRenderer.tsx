@@ -60,6 +60,8 @@ export function SiteRenderer({
   }, [rawServices, urls]);
   
   const gallery = safe.gallery.map((path) => urls[path]).filter((url): url is string => !!url);
+  
+  const heroImageUrl = safe.heroImage ? (urls[safe.heroImage] || safe.heroImage) : undefined;
 
   const nav = [
     { id: "sobre", label: "Sobre", show: !!about || preview },
@@ -150,6 +152,7 @@ export function SiteRenderer({
         darkMode={darkMode}
         whatsappHref={whatsappHref}
         instagramHref={instagramHref}
+        heroImage={heroImageUrl}
       />
 
       {about && (

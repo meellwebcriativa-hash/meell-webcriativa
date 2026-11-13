@@ -12,6 +12,7 @@ type HeroSectionProps = {
   theme: SiteTheme;
   whatsappHref: string;
   instagramHref: string | null;
+  heroImage?: string;
 };
 
 export function HeroArch({ name, tagline, segmentText, theme, muted, darkMode }: HeroSectionProps) {
@@ -106,7 +107,7 @@ export function HeroLayoutRenderer({ layout, ...props }: { layout: HeroLayout } 
               style={{ borderColor: props.theme.border }}
             >
               <img
-                src={designs[Object.keys(designs).find(k => designs[k].hero === "split") as keyof typeof designs]?.image || designs.outro.image}
+                src={props.heroImage || designs.outro.image}
                 alt={`${props.name} - imagem de exemplo`}
                 className="h-full w-full object-cover"
               />
@@ -145,7 +146,8 @@ export function HeroLayoutRenderer({ layout, ...props }: { layout: HeroLayout } 
         </section>
       );
 
-    case "polaroid":
+    case "polaroid": {
+      const heroImg = props.heroImage || design.image;
       return (
         <section style={{ background: props.theme.bg }} className="px-5 py-20 sm:py-28">
           <div className="mx-auto max-w-5xl">
@@ -166,7 +168,7 @@ export function HeroLayoutRenderer({ layout, ...props }: { layout: HeroLayout } 
                   style={{ borderColor: props.theme.border }}
                 >
                   <img
-                    src={designs.outro.image}
+                    src={heroImg}
                     alt={`Foto ${n}`}
                     className="h-full w-full object-cover"
                   />
@@ -177,6 +179,7 @@ export function HeroLayoutRenderer({ layout, ...props }: { layout: HeroLayout } 
           </div>
         </section>
       );
+    }
 
     case "circle":
       return (
@@ -234,7 +237,7 @@ export function HeroLayoutRenderer({ layout, ...props }: { layout: HeroLayout } 
           <div className="grid items-center gap-12 sm:grid-cols-[1fr_1fr]">
             <div>
               <p className="text-[0.7rem] font-semibold tracking-[0.25em] uppercase text-muted-foreground">
-                Fotografia
+                {props.segmentText}
               </p>
               <h1 style={{ fontFamily: props.theme.display }} className="mt-4 text-4xl font-semibold sm:text-5xl">
                 {props.name}
@@ -258,7 +261,7 @@ export function HeroLayoutRenderer({ layout, ...props }: { layout: HeroLayout } 
             </div>
             <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border" style={{ borderColor: props.theme.border }}>
               <img
-                src={designs.fotografia.image}
+                src={props.heroImage || design.image}
                 alt={`${props.name} - ensaio fotográfico`}
                 className="h-full w-full object-cover"
               />
