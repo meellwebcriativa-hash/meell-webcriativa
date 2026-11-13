@@ -10,6 +10,7 @@ export function PageBackdrop({ className }: { className?: string }) {
 
       <div className="animate-drift-slow absolute -top-48 -left-32 size-[36rem] rounded-full bg-lilac/25 blur-3xl" />
       <div className="animate-drift-slower absolute -top-40 -right-28 size-[32rem] rounded-full bg-pink/25 blur-3xl" />
+      <div className="animate-float-soft absolute top-[-20rem] right-[-15rem] size-[20rem] rounded-full bg-pink/20 blur-2xl" />
       <div className="animate-drift-slower absolute bottom-[-12rem] left-1/3 size-[30rem] rounded-full bg-lilac-soft/60 blur-3xl" />
 
       <div className="bg-dots absolute inset-0 opacity-80" />
@@ -20,7 +21,7 @@ export function PageBackdrop({ className }: { className?: string }) {
         fill="none"
         preserveAspectRatio="xMidYMid slice"
       >
-        <g className="stroke-lilac" strokeWidth="1.4">
+        <g className="stroke-lilac animate-pulse-custom" strokeWidth="1.4">
           <circle cx="1290" cy="130" r="110" opacity="0.5" />
           <circle cx="1290" cy="130" r="190" opacity="0.32" />
           <circle cx="1290" cy="130" r="270" opacity="0.2" strokeDasharray="10 12" />

@@ -1,1 +1,1 @@
-﻿Adicionar suporte a imagens editaveis para produtos e animacoes de fundo
+﻿Adicionar animacoes dinamicas aos circulos do fundo superior direito
