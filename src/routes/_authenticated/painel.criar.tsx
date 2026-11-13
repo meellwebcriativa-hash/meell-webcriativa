@@ -9,7 +9,6 @@ import { AppShell, PageTitle } from "@/components/app/AppShell";
 import { SegmentPicker } from "@/components/app/SegmentPicker";
 import { SegmentPreview } from "@/components/app/SegmentPreview";
 import { SitePreviewCard, SiteRenderer } from "@/components/site/SiteRenderer";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -132,9 +131,6 @@ function CreateSite() {
         >
           <ArrowLeft className="size-4" /> Voltar ao painel
         </Link>
-        <div className="flex items-center gap-3">
-          <ThemeToggle className="cursor-pointer" />
-        </div>
       </div>
 
       <PageTitle
