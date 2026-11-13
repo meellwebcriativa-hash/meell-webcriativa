@@ -1,0 +1,17 @@
+# Web Criativa — roadmap
+
+## Etapa 1 (base)
+- [x] Visual da marca, logo, página inicial
+- [x] Login por convite, esqueci minha senha, nova senha
+- [x] Painel da cliente, criar projeto (passo 1-2), pedir site personalizado, minha conta
+- [ ] Admin: solicitações e projetos
+- [ ] Criar conta da administradora
+- [ ] Testes das regras
+
+## Pedido 13/11
+- [ ] Conferir arquivos vindos do GitHub: theme-toggle, SegmentPreview, painel.criar, SiteRenderer (modo escuro)
+- [ ] Ativar modo escuro
+- [ ] Build e publicar
+
+## Etapa 2
+- [ ] Criador completo com prévia ao vivo, salvamento, publicação em /nomedonegocio
