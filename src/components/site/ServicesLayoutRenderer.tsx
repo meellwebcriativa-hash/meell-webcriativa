@@ -4,6 +4,7 @@ import { type SiteTheme, type SiteService } from "@/lib/site-content";
 type ServicesSectionProps = {
   design: SiteDesign;
   services: SiteService[];
+  serviceImages?: string[];
   theme: SiteTheme;
   darkMode: boolean;
   muted: { color: string };
@@ -13,7 +14,16 @@ type ServicesSectionProps = {
 
 type ServicesLayout = SiteDesign["services"];
 
-export function ServicesLayoutRenderer({ layout, services, theme, darkMode, muted, accentStyle, borderColor }: ServicesSectionProps) {
+function getServiceImageUrl(service: SiteService, images: string[] | undefined) {
+  if (!images || images.length === 0) return null;
+  const index = images.findIndex(img => img === service.image);
+  if (index >= 0 && index < images.length) {
+    return images[index];
+  }
+  return service.image || null;
+}
+
+export function ServicesLayoutRenderer({ layout, services, serviceImages, theme, darkMode, muted, accentStyle, borderColor }: ServicesSectionProps) {
   switch (layout) {
     case "pricelist":
       return (

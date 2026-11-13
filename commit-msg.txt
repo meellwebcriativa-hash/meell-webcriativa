@@ -1,1 +1,1 @@
-﻿Permitir editar imagem de servicos/produtos 100% - upload direto
+﻿Corrigir carregamento de imagens de servicos - resolver URLs corretas
