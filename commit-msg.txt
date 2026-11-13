@@ -1,1 +1,1 @@
-﻿Adicionar animacoes dinamicas aos circulos do fundo superior direito
+﻿Permitir editar imagem de servicos/produtos 100% - upload direto

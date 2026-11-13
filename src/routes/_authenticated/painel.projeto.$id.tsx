@@ -439,23 +439,55 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
 
             <Card
               title="Serviços e produtos"
-              hint="Mostre o que você oferece, com preço e foto se quiser."
+              hint="Mostre o que você oferece, com preço, foto e edição completa."
             >
               <div className="space-y-3">
                 {content.services.map((service, index) => (
                   <div key={index} className="rounded-2xl border bg-soft p-4">
                     <div className="flex items-start gap-4">
-                      <div className="flex size-16 items-center justify-center rounded-xl border bg-card">
+                      <label
+                        htmlFor={`service-image-${index}`}
+                        className="relative flex size-16 cursor-pointer items-center justify-center rounded-xl border transition-all hover:border-ring"
+                        style={{
+                          borderColor: service.image ? "transparent" : "var(--border)",
+                          background: service.image ? "transparent" : "var(--background)",
+                          overflow: "hidden",
+                        }}
+                      >
                         {service.image ? (
                           <img
                             src={galleryUrls[service.image] || service.image}
-                            alt={service.title || "Produto"}
-                            className="h-full w-full rounded-xl object-cover"
+                            alt={`${service.title || "Produto"} - clique para mudar`}
+                            className="h-full w-full object-cover transition-all"
                           />
                         ) : (
-                          <ImagePlus className="size-6 text-lilac" />
+                          <div className="flex flex-col items-center justify-center gap-1">
+                            <ImagePlus className="size-5 text-lilac" />
+                            <span className="text-xs text-muted-foreground">Foto</span>
+                          </div>
                         )}
-                      </div>
+                        <input
+                          id={`service-image-${index}`}
+                          type="file"
+                          accept="image/*"
+                          className="absolute inset-0 cursor-pointer opacity-0"
+                          onChange={async (event) => {
+                            const file = event.target.files?.[0];
+                            if (!file) return;
+                            setUploading(true);
+                            try {
+                              const paths = await uploadUserFiles(me!.id, "projects", [file]);
+                              const services = [...content.services];
+                              services[index] = { ...service, image: paths[0] };
+                              patch({ services });
+                            } catch (error) {
+                              toast.error("Erro ao enviar a foto.");
+                            } finally {
+                              setUploading(false);
+                            }
+                          }}
+                        />
+                      </label>
                       <div className="flex-1 space-y-2">
                         <Input
                           value={service.title}
@@ -506,11 +538,6 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
                         <Trash2 />
                       </Button>
                     </div>
-                    {service.image && (
-                      <div className="mt-2 text-xs text-muted-foreground">
-                        Imagem do produto adicionada. Toque para mudar.
-                      </div>
-                    )}
                   </div>
                 ))}
                 <Button
@@ -524,9 +551,9 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
                 >
                   <Plus /> Adicionar serviço
                 </Button>
-              </div>
-              <div className="mt-4 rounded-2xl border border-dashed bg-soft p-3 text-xs text-muted-foreground">
-                Fotos de produtos ficam na galeria abaixo. Você pode usar a mesma galeria para os serviços.
+                <p className="text-xs text-muted-foreground">
+                  {uploading ? "Enviando foto..." : "Clique na caixa de foto para adicionar ou mudar a imagem de cada serviço."}
+                </p>
               </div>
             </Card>
 
