@@ -1,1 +1,1 @@
-﻿Corrigir mapeamento de imagens de produtos - usar serviceImageMap correto
+﻿Corrigir resolucao de URLs de imagens de servicos

@@ -51,7 +51,14 @@ export function SiteRenderer({
   const whatsappHref = whatsappLink(safe.whatsapp);
   const instagramHref = instagramLink(safe.instagram);
   const emailHref = safe.email.trim() ? `mailto:${safe.email.trim()}` : "";
-  const services = safe.services;
+  const rawServices = safe.services;
+  const services = useMemo(() => {
+    return rawServices.map((service) => ({
+      ...service,
+      image: service.image ? urls[service.image] || service.image : undefined,
+    }));
+  }, [rawServices, urls]);
+  
   const gallery = safe.gallery.map((path) => urls[path]).filter((url): url is string => !!url);
 
   const nav = [
