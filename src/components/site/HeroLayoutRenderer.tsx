@@ -1,5 +1,6 @@
-import { type SiteDesign, SITE_DESIGNS } from "@/lib/site-designs";
-import { type SiteTheme, themeFor } from "@/lib/site-content";
+import { ImagePlus } from "lucide-react";
+import { type SiteDesign } from "@/lib/site-designs";
+import { type SiteTheme } from "@/lib/site-content";
 
 type HeroSectionProps = {
   design: SiteDesign;
@@ -12,8 +13,41 @@ type HeroSectionProps = {
   theme: SiteTheme;
   whatsappHref: string;
   instagramHref: string | null;
-  heroImage?: string;
+  heroImage?: string | undefined;
+  /** When set (editor), clicking the main photo opens the photo picker. */
+  onEditImage?: (() => void) | undefined;
 };
+
+/** Main photo of the site; in the editor it becomes a "Trocar foto" button. */
+function HeroImage({
+  src,
+  alt,
+  className = "",
+  onEdit,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  onEdit?: (() => void) | undefined;
+}) {
+  const img = <img src={src} alt={alt} className="h-full w-full object-cover" />;
+  if (!onEdit) return <div className={`relative overflow-hidden ${className}`}>{img}</div>;
+  return (
+    <button
+      type="button"
+      onClick={onEdit}
+      aria-label="Trocar a foto principal do site"
+      className={`group/hero relative block overflow-hidden ${className}`}
+    >
+      {img}
+      <span className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover/hero:bg-black/35">
+        <span className="inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-sm font-medium text-neutral-800 shadow-lg">
+          <ImagePlus className="size-4" /> Trocar foto principal
+        </span>
+      </span>
+    </button>
+  );
+}
 
 export function HeroArch({ name, tagline, segmentText, theme, muted, darkMode }: HeroSectionProps) {
   return (
@@ -41,7 +75,9 @@ export function HeroArch({ name, tagline, segmentText, theme, muted, darkMode }:
 type HeroLayout = SiteDesign["hero"];
 
 export function HeroLayoutRenderer({ layout, design, ...props }: { layout: HeroLayout } & HeroSectionProps) {
-  const segmentImage = design.image;
+  const src = props.heroImage || design.image;
+  const alt = props.heroImage ? `${props.name} — foto principal` : design.imageAlt;
+  const edit = props.onEditImage;
   
   switch (layout) {
     case "arch":
@@ -56,9 +92,10 @@ export function HeroLayoutRenderer({ layout, design, ...props }: { layout: HeroL
             <h1 style={{ fontFamily: props.theme.display }} className="mt-4 text-5xl font-semibold sm:text-7xl">
               {props.name}
             </h1>
-            <p style={props.muted} className="mt-6 max-w-2xl text-lg">
+            <p style={props.muted} className="mx-auto mt-6 max-w-2xl text-lg">
               {props.tagline}
             </p>
+            <HeroImage src={src} alt={alt} onEdit={edit} className="mx-auto mt-10 aspect-[4/3] w-full max-w-xl rounded-t-[12rem] rounded-b-3xl" />
           </div>
         </section>
       );
@@ -102,31 +139,23 @@ export function HeroLayoutRenderer({ layout, design, ...props }: { layout: HeroL
                 ) : null}
               </div>
             </div>
-            <div 
-              className="relative aspect-[4/3] overflow-hidden rounded-3xl border"
-              style={{ borderColor: props.theme.border }}
-            >
-              <img
-                src={props.heroImage || segmentImage}
-                alt={`${props.name} - imagem de exemplo`}
-                className="h-full w-full object-cover"
-              />
-            </div>
+            <HeroImage src={src} alt={alt} onEdit={edit} className="aspect-[4/3] w-full rounded-3xl" />
           </div>
         </section>
       );
 
     case "banner":
       return (
-        <section style={{ background: props.theme.heroBg }} className="px-5 py-24 sm:py-32">
+        <section style={{ background: props.theme.heroBg }} className="px-5 py-16 sm:py-20">
           <div className="mx-auto max-w-5xl text-center">
+            <HeroImage src={src} alt={alt} onEdit={edit} className="mb-10 aspect-[21/9] w-full rounded-3xl" />
             <p className="text-[0.7rem] font-semibold tracking-[0.25em] uppercase" style={{ color: props.darkMode ? "#ff8080" : props.theme.accent }}>
               {props.segmentText}
             </p>
             <h1 style={{ fontFamily: props.theme.display }} className="mt-4 text-4xl font-semibold sm:text-5xl">
               {props.name}
             </h1>
-            <p style={props.muted} className="mt-5 max-w-2xl text-lg">
+            <p style={props.muted} className="mx-auto mt-5 max-w-2xl text-lg">
               {props.tagline}
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -156,24 +185,11 @@ export function HeroLayoutRenderer({ layout, design, ...props }: { layout: HeroL
             <h1 style={{ fontFamily: props.theme.display }} className="mt-4 text-center text-4xl font-semibold sm:text-5xl">
               {props.name}
             </h1>
-            <p style={props.muted} className="mt-6 max-w-2xl text-center text-lg">
+            <p style={props.muted} className="mx-auto mt-6 max-w-2xl text-center text-lg">
               {props.tagline}
             </p>
-            <div className="mt-12 grid grid-cols-3 gap-4 sm:grid-cols-4 sm:gap-6">
-              {[1, 2, 3, 4].map((n) => (
-                <div
-                  key={n}
-                  className="relative overflow-hidden rounded-2xl border bg-card shadow-card"
-                  style={{ borderColor: props.theme.border }}
-                >
-                  <img
-                    src={props.heroImage || segmentImage}
-                    alt={`Foto ${n}`}
-                    className="h-full w-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                </div>
-              ))}
+            <div className="mx-auto mt-12 max-w-2xl -rotate-2 rounded-2xl bg-white p-3 pb-10 shadow-card">
+              <HeroImage src={src} alt={alt} onEdit={edit} className="aspect-[4/3] w-full rounded-xl" />
             </div>
           </div>
         </section>
@@ -190,9 +206,10 @@ export function HeroLayoutRenderer({ layout, design, ...props }: { layout: HeroL
             <h1 style={{ fontFamily: props.theme.display }} className="mt-4 text-4xl font-semibold sm:text-5xl">
               {props.name}
             </h1>
-            <p style={props.muted} className="mt-6 max-w-2xl text-lg">
+            <p style={props.muted} className="mx-auto mt-6 max-w-2xl text-lg">
               {props.tagline}
             </p>
+            <HeroImage src={src} alt={alt} onEdit={edit} className="mx-auto mt-10 aspect-[16/10] w-full max-w-2xl rounded-[2.5rem]" />
           </div>
         </section>
       );
@@ -201,14 +218,15 @@ export function HeroLayoutRenderer({ layout, design, ...props }: { layout: HeroL
       return (
         <section style={{ background: props.darkMode ? "#1a1a1a" : "#fafafa" }} className="px-5 py-24 sm:py-32">
           <div className="mx-auto max-w-5xl text-center">
-            <h1 style={{ fontFamily: props.theme.display }} className="text-6xl font-bold sm:text-8xl" style={{ color: props.darkMode ? "#e0e0e0" : "#333" }}>
-              {props.name.split("")[0]}
+            <HeroImage src={src} alt={alt} onEdit={edit} className="mb-10 aspect-[21/9] w-full rounded-2xl" />
+            <h1 style={{ fontFamily: props.theme.display, color: props.darkMode ? "#e0e0e0" : "#333" }} className="text-6xl font-bold uppercase sm:text-8xl">
+              {props.name}
             </h1>
             <div className="mt-4">
-              <h2 style={{ fontFamily: props.theme.display }} className="text-2xl font-semibold sm:text-3xl">
-                {props.name}
+              <h2 style={{ fontFamily: props.theme.display }} className="text-2xl font-semibold uppercase tracking-widest sm:text-3xl">
+                {props.segmentText}
               </h2>
-              <p style={props.muted} className="mt-2 max-w-lg text-lg">
+              <p style={props.muted} className="mx-auto mt-2 max-w-lg text-lg">
                 {props.tagline}
               </p>
             </div>
@@ -257,13 +275,7 @@ export function HeroLayoutRenderer({ layout, design, ...props }: { layout: HeroL
                 ) : null}
               </div>
             </div>
-            <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border" style={{ borderColor: props.theme.border }}>
-              <img
-                src={props.heroImage || segmentImage}
-                alt={`${props.name} - ensaio fotográfico`}
-                className="h-full w-full object-cover"
-              />
-            </div>
+            <HeroImage src={src} alt={alt} onEdit={edit} className="aspect-[4/5] w-full rounded-3xl" />
           </div>
         </section>
       );

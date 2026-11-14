@@ -24,6 +24,8 @@ export type SiteRendererProps = {
   preview?: boolean;
   /** Toggle dark mode preview */
   darkMode?: boolean;
+  /** Editor only: clicking the main photo opens the photo picker. */
+  onEditHeroImage?: (() => void) | undefined;
 };
 
 export function SiteRenderer({
@@ -34,6 +36,7 @@ export function SiteRenderer({
   urls = {},
   preview = false,
   darkMode = false,
+  onEditHeroImage,
 }: SiteRendererProps) {
   const theme = themeFor(template);
   const design: SiteDesign = designForSegment(segment);
@@ -143,6 +146,8 @@ export function SiteRenderer({
 
       <HeroLayoutRenderer
         layout={design.hero}
+        design={design}
+        onEditImage={onEditHeroImage}
         name={businessName}
         segmentText={segmentText}
         tagline={tagline}
