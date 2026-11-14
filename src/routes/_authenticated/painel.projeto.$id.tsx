@@ -41,6 +41,7 @@ import { PROJECT_STATUS, SITE_STYLES, segmentLabel, type ProjectStatus } from "@
 import { publishProject, setProjectStatus } from "@/lib/projects";
 import { meQuery, projectQuery, type Me } from "@/lib/queries";
 import { parseSiteContent, storagePathsOf, type SiteContent } from "@/lib/site-content";
+import { designForSegment } from "@/lib/site-designs";
 import { hasCustomContent, templateForSegment, withSegmentTemplate } from "@/lib/site-templates";
 import { MAX_PHOTOS, signedUrls, uploadUserFiles } from "@/lib/uploads";
 import { cn } from "@/lib/utils";
@@ -366,11 +367,12 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
                   >
                     {content.heroImage && galleryUrls[content.heroImage] ? (
                       <img src={galleryUrls[content.heroImage]} alt="Foto principal atual" className="h-full w-full object-cover" />
-                    ) : (
-                      <span className="flex h-full w-full flex-col items-center justify-center gap-1 text-xs text-muted-foreground">
-                        {uploading ? <Loader2 className="size-5 animate-spin" /> : <ImagePlus className="size-5 text-lilac" />}
-                        {content.heroImage ? "Carregando" : "Foto do modelo"}
+                    ) : uploading || content.heroImage ? (
+                      <span className="flex h-full w-full items-center justify-center">
+                        <Loader2 className="size-5 animate-spin text-lilac" />
                       </span>
+                    ) : (
+                      <img src={designForSegment(segment).image} alt="Foto do modelo" className="h-full w-full object-cover" />
                     )}
                   </button>
                   <div className="space-y-1 text-sm">
