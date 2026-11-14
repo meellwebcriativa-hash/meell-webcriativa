@@ -15,3 +15,9 @@
 
 ## Etapa 2
 - [x] Criador completo com prévia ao vivo, salvamento, publicação em /s/nomedonegocio (veio do GitHub)
+
+## Auditoria 14/11
+- [x] Miniaturas dos segmentos retangulares com cantos arredondados
+- [x] "Criar meu próprio site" volta a abrir o editor (prévia quebrava)
+- [x] Fotos de produtos/serviços e foto principal aparecem no site publicado
+- [x] Foto principal editável (clique na prévia ou em "Foto principal" no editor)

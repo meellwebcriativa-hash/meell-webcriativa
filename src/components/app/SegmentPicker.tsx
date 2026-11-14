@@ -66,20 +66,21 @@ export function SegmentPicker({
               onClick={() => onChange(s.value)}
               aria-pressed={isSelected}
               className={cn(
-                "relative flex cursor-pointer flex-col items-center gap-2 rounded-2xl border bg-card px-3 py-4 text-sm font-medium text-secondary-foreground transition-all hover:border-ring active:scale-[0.98] group",
+                "relative flex cursor-pointer flex-col items-center gap-2 rounded-2xl border bg-card p-2 pb-3 text-sm font-medium text-secondary-foreground transition-all hover:border-ring active:scale-[0.98] group",
                 isSelected && "border-transparent bg-soft shadow-xl shadow-brand/20 ring-2 ring-ring",
               )}
             >
               <div
                 className={cn(
-                  "flex size-10 overflow-hidden rounded-xl transition-all",
+                  "aspect-[16/10] w-full overflow-hidden rounded-lg transition-all",
                   isSelected ? "bg-brand text-primary-foreground" : "bg-secondary text-secondary-foreground",
                 )}
               >
                 <img
                   src={img}
-                  alt={s.label}
-                  className="w-full h-full object-cover"
+                  alt={`Modelo de ${s.label}`}
+                  loading="lazy"
+                  className="h-full w-full object-cover"
                 />
               </div>
               <span className="text-center leading-tight max-w-full">
