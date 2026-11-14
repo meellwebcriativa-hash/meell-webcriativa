@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { parseSiteContent, type SiteContent } from "@/lib/site-content";
+import { parseSiteContent, storagePathsOf, type SiteContent } from "@/lib/site-content";
 
 export type PublicSite = {
   id: string;
@@ -42,10 +42,11 @@ export const getPublicSite = createServerFn({ method: "GET" })
       const content = parseSiteContent(project.content);
       const urls: Record<string, string> = {};
 
-      if (content.gallery.length > 0) {
+      const paths = storagePathsOf(content);
+      if (paths.length > 0) {
         const { data: signed, error: signError } = await supabaseAdmin.storage
           .from("uploads")
-          .createSignedUrls(content.gallery, SIGNED_URL_TTL);
+          .createSignedUrls(paths, SIGNED_URL_TTL);
         if (signError) console.error("getPublicSite:signedUrls", signError);
         for (const item of signed ?? []) {
           if (item.path && item.signedUrl) urls[item.path] = item.signedUrl;

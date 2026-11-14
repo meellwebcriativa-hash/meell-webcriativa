@@ -1,8 +1,8 @@
-import { type SiteDesign, SITE_DESIGNS } from "@/lib/site-designs";
+import { type SiteDesign } from "@/lib/site-designs";
 import { type SiteTheme, type SiteService } from "@/lib/site-content";
 
 type ServicesSectionProps = {
-  design: SiteDesign;
+  layout: SiteDesign["services"];
   services: SiteService[];
   serviceImageMap?: Record<string, string>;
   theme: SiteTheme;
@@ -17,6 +17,12 @@ type ServicesLayout = SiteDesign["services"];
 function getServiceImageUrl(service: SiteService, imageMap: Record<string, string> | undefined) {
   if (!imageMap || !service.image) return null;
   return imageMap[service.image] || service.image || null;
+}
+
+/** Small photo shown on every layout when the client uploaded one. */
+function ServiceThumb({ url, alt, className = "size-16" }: { url: string | null; alt: string; className?: string }) {
+  if (!url) return null;
+  return <img src={url} alt={alt} loading="lazy" className={`${className} shrink-0 rounded-xl object-cover`} />;
 }
 
 export function ServicesLayoutRenderer({ layout, services, serviceImageMap, theme, darkMode, muted, accentStyle, borderColor }: ServicesSectionProps) {
@@ -58,6 +64,7 @@ export function ServicesLayoutRenderer({ layout, services, serviceImageMap, them
                 className="flex flex-col items-center gap-2 rounded-2xl border bg-card p-4 text-center"
                 style={{ borderColor, minWidth: "120px" }}
               >
+                <ServiceThumb url={getServiceImageUrl(service, serviceImageMap)} alt={service.title || "Serviço"} className="h-24 w-32" />
                 <h3 className="font-semibold text-sm">{service.title || "Serviço"}</h3>
                 {service.price && (
                   <span style={{ color: darkMode ? "#ff8080" : theme.accent }} className="text-xs font-medium">
@@ -115,7 +122,9 @@ export function ServicesLayoutRenderer({ layout, services, serviceImageMap, them
           </h2>
           <div className="mt-8 max-w-2xl">
             {services.map((service, index) => (
-              <div key={index} className="mb-4 border-b pb-4" style={{ borderColor }}>
+              <div key={index} className="mb-4 flex items-start gap-4 border-b pb-4" style={{ borderColor }}>
+                <ServiceThumb url={getServiceImageUrl(service, serviceImageMap)} alt={service.title || "Item"} />
+                <div className="flex-1">
                 <h3 className="font-semibold text-base">{service.title || "Item"}</h3>
                 {service.description && <p style={muted} className="mt-1 text-sm">{service.description}</p>}
                 {service.price && (
@@ -123,6 +132,7 @@ export function ServicesLayoutRenderer({ layout, services, serviceImageMap, them
                     {service.price}
                   </p>
                 )}
+                </div>
               </div>
             ))}
           </div>
@@ -138,6 +148,7 @@ export function ServicesLayoutRenderer({ layout, services, serviceImageMap, them
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service, index) => (
               <article key={index} className="rounded-2xl border bg-card p-4" style={{ borderColor }}>
+                <ServiceThumb url={getServiceImageUrl(service, serviceImageMap)} alt={service.title || "Serviço"} className="mb-3 h-40 w-full" />
                 <h3 className="font-semibold text-base">{service.title || "Serviço"}</h3>
                 {service.description && <p style={muted} className="mt-2 text-sm">{service.description}</p>}
                 {service.price && (
@@ -160,6 +171,7 @@ export function ServicesLayoutRenderer({ layout, services, serviceImageMap, them
           <div className="mt-12 max-w-2xl">
             {services.map((service, index) => (
               <div key={index} className="mb-6">
+                <ServiceThumb url={getServiceImageUrl(service, serviceImageMap)} alt={service.title || "Item"} className="mb-2 h-32 w-48" />
                 <h3 className="font-semibold text-base">{service.title || "Item"}</h3>
                 {service.description && <p style={muted} className="mt-2 text-sm">{service.description}</p>}
               </div>
@@ -180,6 +192,7 @@ export function ServicesLayoutRenderer({ layout, services, serviceImageMap, them
                 <div className="flex size-10 items-center justify-center rounded-full text-sm font-bold" style={{ background: accentStyle.color, color: "#fff" }}>
                   {index + 1}
                 </div>
+                <ServiceThumb url={getServiceImageUrl(service, serviceImageMap)} alt={service.title || "Passo"} />
                 <div>
                   <h3 className="font-semibold text-base">{service.title || "Passo"}</h3>
                   {service.description && <p style={muted} className="mt-1 text-sm">{service.description}</p>}
@@ -211,7 +224,12 @@ export function ServicesLayoutRenderer({ layout, services, serviceImageMap, them
               <tbody>
                 {services.map((service, index) => (
                   <tr key={index} className="border-b" style={{ borderColor }}>
-                    <td className="px-4 py-3">{service.title || "Serviço"}</td>
+                    <td className="px-4 py-3">
+                      <span className="flex items-center gap-3">
+                        <ServiceThumb url={getServiceImageUrl(service, serviceImageMap)} alt={service.title || "Serviço"} className="size-12" />
+                        {service.title || "Serviço"}
+                      </span>
+                    </td>
                     <td className="px-4 py-3 text-right" style={{ color: darkMode ? "#ff8080" : accentStyle.color }}>
                       {service.price || "-"}
                     </td>
@@ -232,6 +250,7 @@ export function ServicesLayoutRenderer({ layout, services, serviceImageMap, them
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service, index) => (
               <article key={index} className="rounded-3xl border bg-card p-6" style={{ borderColor }}>
+                <ServiceThumb url={getServiceImageUrl(service, serviceImageMap)} alt={service.title || "Serviço"} className="mb-3 h-40 w-full" />
                 <h3 className="font-semibold text-xl">{service.title || "Pacote"}</h3>
                 {service.description && <p style={muted} className="mt-2 text-sm">{service.description}</p>}
                 {service.price && (
@@ -254,6 +273,7 @@ export function ServicesLayoutRenderer({ layout, services, serviceImageMap, them
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service, index) => (
               <article key={index} className="rounded-2xl border bg-card p-4" style={{ borderColor }}>
+                <ServiceThumb url={getServiceImageUrl(service, serviceImageMap)} alt={service.title || "Serviço"} className="mb-3 h-40 w-full" />
                 <h3 className="font-semibold text-base">{service.title || "Serviço"}</h3>
                 {service.description && <p style={muted} className="mt-1 text-sm">{service.description}</p>}
                 {service.price && (

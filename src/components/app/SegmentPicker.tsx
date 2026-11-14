@@ -72,14 +72,15 @@ export function SegmentPicker({
             >
               <div
                 className={cn(
-                  "flex size-10 overflow-hidden rounded-xl transition-all",
+                  "aspect-[4/3] w-full overflow-hidden rounded-xl transition-all",
                   isSelected ? "bg-brand text-primary-foreground" : "bg-secondary text-secondary-foreground",
                 )}
               >
                 <img
                   src={img}
-                  alt={s.label}
-                  className="w-full h-full object-cover"
+                  alt={`Modelo de ${s.label}`}
+                  loading="lazy"
+                  className="h-full w-full object-cover"
                 />
               </div>
               <span className="text-center leading-tight max-w-full">

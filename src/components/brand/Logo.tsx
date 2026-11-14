@@ -15,7 +15,7 @@ export function LogoIcon({ className }: { className?: string }) {
           <stop offset="100%" stop-color="#9b59b6" />
         </linearGradient>
       </defs>
-      <text x="50" y="65" font-family="Fraunces,ui-serif,Georgia,serif" font-weight="700" font-size="64" text-anchor="middle" fill="url(#wc-gradient)" letter-spacing="-0.04em">WC</text>
+      <text x="50" y="65" fontFamily="Fraunces,ui-serif,Georgia,serif" fontWeight="700" fontSize="64" textAnchor="middle" fill="url(#wc-gradient)" letterSpacing="-0.04em">WC</text>
     </svg>
   );
 }

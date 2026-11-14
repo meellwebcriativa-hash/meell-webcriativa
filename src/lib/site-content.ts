@@ -5,7 +5,7 @@ export type SiteService = {
   title: string;
   description: string;
   price: string;
-  image?: string;
+  image?: string | undefined;
 };
 
 /**
@@ -25,7 +25,7 @@ export type SiteContent = {
   /** Storage paths inside the `uploads` bucket. */
   gallery: string[];
   /** Optional hero image path - overrides the default segment image. */
-  heroImage?: string;
+  heroImage?: string | undefined;
 };
 
 export const emptySiteContent: SiteContent = {
@@ -82,6 +82,16 @@ export function parseSiteContent(raw: unknown): SiteContent {
     gallery,
     heroImage: text(source["heroImage"]),
   };
+}
+
+/** Every uploaded file the site points to (gallery, service photos, main photo). */
+export function storagePathsOf(content: SiteContent): string[] {
+  const paths = [
+    ...content.gallery,
+    ...content.services.map((service) => service.image ?? ""),
+    content.heroImage ?? "",
+  ].filter((path) => !!path && !/^(https?:|data:|blob:|\/)/.test(path));
+  return Array.from(new Set(paths));
 }
 
 /** Requests store the free-text segment as `outro:descrição`. */
