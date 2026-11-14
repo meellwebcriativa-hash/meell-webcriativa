@@ -10,9 +10,9 @@ export function LogoIcon({ className }: { className?: string }) {
     >
       <defs>
         <linearGradient id="wc-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#8a2be2" />
-          <stop offset="50%" stop-color="#ff69b4" />
-          <stop offset="100%" stop-color="#9b59b6" />
+          <stop offset="0%" stopColor="#8a2be2" />
+          <stop offset="50%" stopColor="#ff69b4" />
+          <stop offset="100%" stopColor="#9b59b6" />
         </linearGradient>
       </defs>
       <text x="50" y="65" fontFamily="Fraunces,ui-serif,Georgia,serif" fontWeight="700" fontSize="64" textAnchor="middle" fill="url(#wc-gradient)" letterSpacing="-0.04em">WC</text>
