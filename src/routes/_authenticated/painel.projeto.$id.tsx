@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute, Link, notFound, redirect, useParams } from "@tanstack/react-router";
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import {
@@ -40,7 +40,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { PROJECT_STATUS, SITE_STYLES, segmentLabel, type ProjectStatus } from "@/lib/constants";
 import { publishProject, setProjectStatus } from "@/lib/projects";
 import { meQuery, projectQuery, type Me } from "@/lib/queries";
-import { parseSiteContent, type SiteContent } from "@/lib/site-content";
+import { parseSiteContent, storagePathsOf, type SiteContent } from "@/lib/site-content";
 import { hasCustomContent, templateForSegment, withSegmentTemplate } from "@/lib/site-templates";
 import { MAX_PHOTOS, signedUrls, uploadUserFiles } from "@/lib/uploads";
 import { cn } from "@/lib/utils";
@@ -118,17 +118,17 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
   const [uploading, setUploading] = useState(false);
   const [applyTemplateOpen, setApplyTemplateOpen] = useState(false);
 
-  const galleryKey = content.gallery.join("|");
+  const heroInputRef = useRef<HTMLInputElement>(null);
+  // Gallery, service photos and the main photo are all private files: sign every one.
+  const storagePaths = storagePathsOf(content);
+  const galleryKey = storagePaths.join("|");
 
   useEffect(() => {
-    if (content.gallery.length === 0) {
-      setGalleryUrls({});
-      return;
-    }
+    if (storagePaths.length === 0) return;
     let active = true;
-    signedUrls(content.gallery)
+    signedUrls(storagePaths)
       .then((map) => {
-        if (active) setGalleryUrls(map);
+        if (active) setGalleryUrls((current) => ({ ...current, ...map }));
       })
       .catch(() => undefined);
     return () => {
@@ -256,6 +256,23 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
     }
   }
 
+  async function handleHeroUpload(file: File | undefined) {
+    if (!file || !me) return;
+    setUploading(true);
+    try {
+      const [path] = await uploadUserFiles(me.id, "projects", [file]);
+      if (!path) throw new Error("Não foi possível enviar a foto.");
+      const urls = await signedUrls([path]);
+      setGalleryUrls((current) => ({ ...current, ...urls }));
+      patch({ heroImage: path });
+      toast.success("Foto principal trocada. Clique em Salvar para guardar.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível enviar a foto.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
   function removePhoto(path: string) {
     setContent((current) => ({
       ...current,
@@ -336,6 +353,49 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
                   value={name}
                   onChange={(event) => setName(event.target.value)}
                   className="h-11 rounded-xl"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Foto principal</Label>
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => heroInputRef.current?.click()}
+                    className="relative h-20 w-32 overflow-hidden rounded-xl border bg-soft hover:border-ring"
+                    aria-label="Trocar a foto principal do site"
+                  >
+                    {content.heroImage && galleryUrls[content.heroImage] ? (
+                      <img src={galleryUrls[content.heroImage]} alt="Foto principal atual" className="h-full w-full object-cover" />
+                    ) : (
+                      <span className="flex h-full w-full flex-col items-center justify-center gap-1 text-xs text-muted-foreground">
+                        {uploading ? <Loader2 className="size-5 animate-spin" /> : <ImagePlus className="size-5 text-lilac" />}
+                        {content.heroImage ? "Carregando" : "Foto do modelo"}
+                      </span>
+                    )}
+                  </button>
+                  <div className="space-y-1 text-sm">
+                    <Button type="button" variant="outline" size="sm" onClick={() => heroInputRef.current?.click()} disabled={uploading}>
+                      <ImagePlus /> {content.heroImage ? "Trocar foto" : "Enviar minha foto"}
+                    </Button>
+                    {content.heroImage ? (
+                      <button type="button" onClick={() => patch({ heroImage: "" })} className="block text-xs text-muted-foreground underline-offset-4 hover:underline">
+                        Voltar para a foto do modelo
+                      </button>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">Ou clique na foto grande da prévia.</p>
+                    )}
+                  </div>
+                </div>
+                <input
+                  ref={heroInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="sr-only"
+                  tabIndex={-1}
+                  onChange={(event) => {
+                    void handleHeroUpload(event.target.files?.[0]);
+                    event.target.value = "";
+                  }}
                 />
               </div>
               <div className="space-y-3">
@@ -697,6 +757,7 @@ function ProjectEditorForm({ project, me }: { project: EditorProject; me: Me | n
                 content={preview}
                 urls={galleryUrls}
                 preview
+                onEditHeroImage={canEdit ? () => heroInputRef.current?.click() : undefined}
               />
             </div>
           </SitePreviewCard>
