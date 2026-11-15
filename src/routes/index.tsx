@@ -90,13 +90,20 @@ function Landing() {
         </div>
         <div className="relative">
           <div className="absolute -inset-6 -z-10 rounded-[3rem] bg-brand opacity-20 blur-3xl" />
-          <img
-            src={hero}
-            alt="Site sendo montado no notebook e site personalizado no celular"
-            width={1200}
-            height={912}
-            className="w-full rounded-[2.5rem] border border-card shadow-candy animate-float-soft"
-          />
+          <Link
+            to="/auth"
+            aria-label="Entrar na plataforma"
+            title="Entrar na plataforma"
+            className="group block overflow-hidden rounded-[2.5rem]"
+          >
+            <img
+              src={hero}
+              alt="Site sendo montado no notebook e site personalizado no celular"
+              width={1200}
+              height={912}
+              className="w-full rounded-[2.5rem] border border-card shadow-candy animate-float-soft transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+            />
+          </Link>
           <div className="mt-5 flex flex-wrap justify-center gap-2">
             {SEGMENTS.filter((s) => s.value !== "outro").map((s) => (
               <span key={s.value} className="cursor-default rounded-full border bg-card/80 px-3.5 py-1.5 text-xs font-medium text-secondary-foreground shadow-card backdrop-blur transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-105 hover:border-pink/60 hover:bg-card hover:text-primary hover:shadow-candy">
