@@ -21,3 +21,8 @@
 - [x] "Criar meu próprio site" volta a abrir o editor (prévia quebrava)
 - [x] Fotos de produtos/serviços e foto principal aparecem no site publicado
 - [x] Foto principal editável (clique na prévia ou em "Foto principal" no editor)
+
+## 15/11
+- [x] Foto da página inicial clicável → leva ao login
+- [x] Após o login, abrir em "Meu painel" (com o nome da usuária), inclusive para a administradora
+- [ ] Assistente de IA "Meell Criativa" (documento recebido; aguarda OK para começar)
