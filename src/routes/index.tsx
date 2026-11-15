@@ -99,7 +99,7 @@ function Landing() {
           />
           <div className="mt-5 flex flex-wrap justify-center gap-2">
             {SEGMENTS.filter((s) => s.value !== "outro").map((s) => (
-              <span key={s.value} className="rounded-full border bg-card/80 px-3 py-1 text-xs font-medium text-secondary-foreground shadow-card backdrop-blur">
+              <span key={s.value} className="cursor-default rounded-full border bg-card/80 px-3.5 py-1.5 text-xs font-medium text-secondary-foreground shadow-card backdrop-blur transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-105 hover:border-pink/60 hover:bg-card hover:text-primary hover:shadow-candy">
                 {s.emoji} {s.label}
               </span>
             ))}
