@@ -92,11 +92,18 @@ function Landing() {
           <div className="absolute -inset-6 -z-10 rounded-[3rem] bg-brand opacity-20 blur-3xl" />
           <img
             src={hero}
-            alt="Notebook e celular mostrando um site em tons de lilás e rosa"
-            width={1600}
-            height={1104}
+            alt="Site sendo montado no notebook e site personalizado no celular"
+            width={1200}
+            height={912}
             className="w-full rounded-[2.5rem] border border-card shadow-candy animate-float-soft"
           />
+          <div className="mt-5 flex flex-wrap justify-center gap-2">
+            {SEGMENTS.filter((s) => s.value !== "outro").map((s) => (
+              <span key={s.value} className="rounded-full border bg-card/80 px-3 py-1 text-xs font-medium text-secondary-foreground shadow-card backdrop-blur">
+                {s.emoji} {s.label}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
