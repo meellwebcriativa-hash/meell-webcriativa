@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { friendlyAuthError } from "@/lib/auth-errors";
+import { postLoginPath } from "@/lib/auth-redirect";
 import { meQuery } from "@/lib/queries";
 import { safeRedirectPath } from "@/lib/schemas";
 import { linkPedirCadastro } from "@/lib/whatsapp";
@@ -47,7 +48,7 @@ function AuthPage() {
     const me = await queryClient.fetchQuery(meQuery);
     if (!me) return;
     if (redirect) navigate({ to: redirect, replace: true });
-    else navigate({ to: me.isAdmin ? "/admin" : "/painel", replace: true });
+    else navigate({ to: postLoginPath(me), replace: true });
   }
 
   useEffect(() => {
