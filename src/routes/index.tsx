@@ -16,10 +16,13 @@ import { PageBackdrop } from "@/components/brand/PageBackdrop";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { SEGMENTS } from "@/lib/constants";
+import { getRequestOrigin } from "@/lib/origin.functions";
+import { LANDING_SHARE_IMAGE, SHARE_IMAGE_HEIGHT, SHARE_IMAGE_WIDTH } from "@/lib/share-image";
 import { linkPedirCadastro, linkSitePersonalizado } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
+  loader: async () => ({ origin: await getRequestOrigin() }),
+  head: ({ loaderData }) => ({
     meta: [
       { title: "Web Criativa — Sua ideia. Seu estilo. Seu site." },
       {
@@ -33,7 +36,18 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      ...(loaderData
+        ? [
+            { property: "og:url", content: `${loaderData.origin}/` },
+            { property: "og:image", content: `${loaderData.origin}${LANDING_SHARE_IMAGE}` },
+            { property: "og:image:width", content: String(SHARE_IMAGE_WIDTH) },
+            { property: "og:image:height", content: String(SHARE_IMAGE_HEIGHT) },
+            { property: "og:image:alt", content: "Sites prontos da Web Criativa em notebook, tablet e celular" },
+            { name: "twitter:image", content: `${loaderData.origin}${LANDING_SHARE_IMAGE}` },
+          ]
+        : []),
     ],
+    links: loaderData ? [{ rel: "canonical", href: `${loaderData.origin}/` }] : [],
   }),
   component: Landing,
 });

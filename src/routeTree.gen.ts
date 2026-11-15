@@ -24,6 +24,7 @@ import { Route as AuthenticatedPainelIndexRouteImport } from './routes/_authenti
 import { Route as AuthenticatedPainelCriarRouteImport } from './routes/_authenticated/painel.criar'
 import { Route as AuthenticatedPainelSolicitarRouteImport } from './routes/_authenticated/painel.solicitar'
 import { Route as AuthenticatedPainelProjetoIdRouteImport } from './routes/_authenticated/painel.projeto.$id'
+import { Route as ApiPublicShareImageSlugRouteImport } from './routes/api/public/share-image.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -106,6 +107,11 @@ const AuthenticatedPainelProjetoIdRoute =
     path: '/painel/projeto/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicShareImageSlugRoute = ApiPublicShareImageSlugRouteImport.update({
+  id: '/api/public/share-image/$slug',
+  path: '/api/public/share-image/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/painel/': typeof AuthenticatedPainelIndexRoute
   '/painel/projeto/$id': typeof AuthenticatedPainelProjetoIdRoute
+  '/api/public/share-image/$slug': typeof ApiPublicShareImageSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/painel': typeof AuthenticatedPainelIndexRoute
   '/painel/projeto/$id': typeof AuthenticatedPainelProjetoIdRoute
+  '/api/public/share-image/$slug': typeof ApiPublicShareImageSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -155,6 +163,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/painel/': typeof AuthenticatedPainelIndexRoute
   '/_authenticated/painel/projeto/$id': typeof AuthenticatedPainelProjetoIdRoute
+  '/api/public/share-image/$slug': typeof ApiPublicShareImageSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -173,6 +182,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/painel/'
     | '/painel/projeto/$id'
+    | '/api/public/share-image/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -188,6 +198,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/painel'
     | '/painel/projeto/$id'
+    | '/api/public/share-image/$slug'
   id:
     | '__root__'
     | '/'
@@ -205,6 +216,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_authenticated/painel/'
     | '/_authenticated/painel/projeto/$id'
+    | '/api/public/share-image/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -213,6 +225,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SSlugRoute: typeof SSlugRoute
+  ApiPublicShareImageSlugRoute: typeof ApiPublicShareImageSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -322,6 +335,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPainelProjetoIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/share-image/$slug': {
+      id: '/api/public/share-image/$slug'
+      path: '/api/public/share-image/$slug'
+      fullPath: '/api/public/share-image/$slug'
+      preLoaderRoute: typeof ApiPublicShareImageSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -369,6 +389,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SSlugRoute: SSlugRoute,
+  ApiPublicShareImageSlugRoute: ApiPublicShareImageSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
