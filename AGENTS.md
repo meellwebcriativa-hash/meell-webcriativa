@@ -31,3 +31,4 @@ use the editor.
 
 ## Project rules
 - Dark mode is the `.dark` class on `<html>`, applied before paint by `THEME_INIT_SCRIPT` in `src/routes/__root.tsx` and toggled only through `ThemeToggle` (one instance per page, in the header) — separate toggles keep their own state and drift out of sync.
+- Link previews: a client site's og:image is always its hero, served by `/api/public/share-image/$slug` (uploaded hero, else the share-size crop in `public/og/segments/`); the home page uses `public/og/web-criativa.jpg`. Regenerate those 1200x630 crops whenever `src/assets/hero-web-criativa.jpg` or `src/assets/templates/*` change — crawlers need absolute, small, non-expiring URLs and the uploads bucket is private.

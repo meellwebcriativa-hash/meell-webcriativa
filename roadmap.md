@@ -25,4 +25,5 @@
 ## 15/11
 - [x] Foto da página inicial clicável → leva ao login
 - [x] Após o login, abrir em "Meu painel" (com o nome da usuária), inclusive para a administradora
+- [x] Foto principal (hero) como miniatura do link compartilhado — padrão para todos os sites e para a página inicial
 - [ ] Assistente de IA "Meell Criativa" (documento recebido; aguarda OK para começar)
